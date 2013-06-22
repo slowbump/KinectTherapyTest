@@ -113,7 +113,7 @@ namespace SWENG.Criteria
         [TestAttribute]
         public void TestJointsMisaligned()
         {
-            #region perpendicular
+            #region Orthogonal
             Joint center = new Joint();
             Joint[] otherJoints = new Joint[2];
 
@@ -142,6 +142,38 @@ namespace SWENG.Criteria
 
             Assert.AreEqual(0.0F, JointAnalyzer.areJointsAligned(center, otherJoints), "Joint vectors should be orthogonal (90 degrees)");
             #endregion
+        }
+
+        [TestAttribute]
+        public void Test90DegreeAngle()
+        {
+            Joint vertex = new Joint();
+            Joint[] otherJoints = new Joint[2];
+
+            SkeletonPoint sp = new SkeletonPoint();
+            sp.X = 0.0F;
+            sp.Y = 0.0F;
+            sp.Z = 0.0F;
+            vertex.Position = sp;
+
+            Joint joint1 = new Joint();
+            SkeletonPoint point = new SkeletonPoint();
+            point.X = 0.0F;
+            point.Y = 1.0F;
+            point.Z = 0.0F;
+            joint1.Position = point;
+
+            Joint joint2 = new Joint();
+            SkeletonPoint point2 = new SkeletonPoint();
+            point2.X = 1.0F;
+            point2.Y = 0.0F;
+            point2.Z = 0.0F;
+            joint2.Position = point2;
+
+            otherJoints[0] = joint1;
+            otherJoints[1] = joint2;
+
+            Assert.AreEqual(90, JointAnalyzer.findAngle(vertex,otherJoints), "Angle should be 90 degrees");
         }
     }
 }
