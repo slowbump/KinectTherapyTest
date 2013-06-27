@@ -31,8 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Kinect.Toolbox">
+      <HintPath>..\..\kinect.toolbox\Kinect.Toolbox.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Kinect, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\NUnit 2.6.2\bin\framework\nunit.framework.dll</HintPath>
@@ -46,10 +51,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Criteria\AlignmentCriterion.cs" />
+    <Compile Include="Criteria\AngleCriterion.cs" />
+    <Compile Include="Criteria\Checkpoint.cs" />
+    <Compile Include="Criteria\CriteriaRepetition.cs" />
+    <Compile Include="Criteria\Criterion.cs" />
+    <Compile Include="Criteria\Exercise.cs" />
+    <Compile Include="Criteria\IRepetition.cs" />
     <Compile Include="Criteria\JointAnalyzer.cs" />
     <Compile Include="Criteria\XmlJointType.cs" />
+    <Compile Include="ExerciseGameComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\ExerciseQueue.cs" />
+    <Compile Include="Service\RecordingManager.cs" />
+    <Compile Include="Service\SkeletonPool.cs" />
+    <Compile Include="SkeletonStamp.cs" />
+    <Compile Include="Test\ExerciseQueueTest.cs" />
     <Compile Include="Test\JointAnalyzerTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KinectTherapyContent\KinectTherapyContent.csproj">
+      <Project>{43442DAA-B835-42F4-9712-576A9101B5C2}</Project>
+      <Name>KinectTherapyContent</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
