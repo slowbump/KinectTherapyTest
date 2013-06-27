@@ -146,45 +146,6 @@ namespace SWENG.Service
             OnLoadComplete(EventArgs.Empty);
         }
 
-        /// <summary>
-        /// Used for hardcoding exercises
-        /// </summary>
-        /// <returns></returns>
-        private Exercise[] generateExercises()
-        {
-            Exercise[] exercises = new Exercise[2];
-            // Hardcoding Right Angle Right Elbow Vertex Criteria
-            Exercise armExtensionExerciseRight = new Exercise();
-            armExtensionExerciseRight.Name = "Right Arm Extension";
-            armExtensionExerciseRight.Repetitions = 3;
-            // criteria to start tracking a repetition
-            XmlJointType[] otherJoints = new XmlJointType[2] { new XmlJointType("WristRight"), new XmlJointType("ShoulderRight") };
-            Criterion rightElbow = new AngleCriterion(90f, new XmlJointType("ElbowRight"), otherJoints, 10f);
-            armExtensionExerciseRight.StartingCriteria = new Criterion[] { rightElbow };
-            // criteria to track during the progress of a repetition
-            // make sure hips stay horizontally aligned
-            XmlJointType[] hipJoints = new XmlJointType[2] { new XmlJointType("HipLeft"), new XmlJointType("HipRight") };
-            Criterion hips = new AlignmentCriterion(hipJoints, Alignment.Horizontal, 0.1f);
-            armExtensionExerciseRight.TrackingCriteria = new Criterion[] { hips };
-
-            // don't forget the left arm
-            Exercise armExtensionExerciseLeft = new Exercise();
-            armExtensionExerciseLeft.Name = "Left Arm Extension";
-            armExtensionExerciseLeft.Repetitions = 3;
-            // criteria to start tracking a repetition
-            XmlJointType[] leftJoints = new XmlJointType[2] { new XmlJointType("WristLeft"), new XmlJointType("ShoulderLeft") };
-            Criterion leftElbow = new AngleCriterion(90f, new XmlJointType("ElbowLeft"), leftJoints, 10f);
-            armExtensionExerciseLeft.StartingCriteria = new Criterion[] { leftElbow };
-            // criteria to track during the progress of a repetition
-            // make sure hips stay horizontally aligned
-            armExtensionExerciseLeft.TrackingCriteria = new Criterion[] { hips };
-
-            exercises[0] = armExtensionExerciseRight;
-            exercises[1] = armExtensionExerciseLeft;
-            return exercises;
-        }
-
-        //public override void Update(GameTime gameTime)
         private void Update()
         {
             // check to see if the reps for the exercise are complete.
