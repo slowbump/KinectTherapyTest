@@ -147,10 +147,8 @@ namespace SWENG.Service
 
         }
 
-        public XmlDocument ListWorkoutExerciseObjects(List<string> exerciseList)
+        public XmlReader ListWorkoutExerciseObjects(List<string> exerciseList)
         {
-            var xmlDocument = new XmlDocument();
-
             var fileContents = String.Empty;
             var startPos = 0;
 
@@ -171,9 +169,9 @@ namespace SWENG.Service
             fileContents = fileContents.Insert(XmlHeader.Length, "<Exercises>");
             fileContents = fileContents + "</Exercises>";
 
-            xmlDocument.LoadXml(fileContents);
+            var xmlReader = XmlReader.Create(fileContents);
 
-            return xmlDocument;
+            return xmlReader;
         }
     }
 }
