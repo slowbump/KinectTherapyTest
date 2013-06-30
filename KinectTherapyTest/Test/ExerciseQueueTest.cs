@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using SWENG.Service;
 using Microsoft.Xna.Framework;
+using SWENG.Criteria;
 
 namespace KinectTherapyTest.Test
 {
@@ -33,7 +34,10 @@ namespace KinectTherapyTest.Test
                 receivedEvents.Add(e.ToString());
             };
 
-            eq.LoadExercises(this, EventArgs.Empty);
+            Exercise[] exercises = new Exercise[1];
+            exercises[0] = new Exercise();
+            exercises[0].Id = "EXELAE";
+            eq.LoadExercises(this, new CatalogCompleteEventArg(exercises));
 
             Assert.AreEqual(2, receivedEvents.Count);
 

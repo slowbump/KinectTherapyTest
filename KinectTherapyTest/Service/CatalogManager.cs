@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Configuration;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
 using Microsoft.Xna.Framework;
 using System.IO;
-
+using System.Xml;
 using SWENG.Criteria;
 
 namespace SWENG.Service
@@ -21,6 +17,11 @@ namespace SWENG.Service
         Cancel
     }
 
+    /// <summary>
+    /// Internal Event which handles selection events performed by the UI layer
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     public delegate void CatalogSelectionStatusChanged(object sender, CatalogSelectionChangedEventArg e);
 
     public class CatalogSelectionChangedEventArg : EventArgs
@@ -33,56 +34,131 @@ namespace SWENG.Service
         }
     }
 
+    /// <summary>
+    /// Used by any Class which wants to know the Catalog creation has completed. 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public delegate void CatalogCompleteEventHandler(object sender, CatalogCompleteEventArg e);
+
+    public class CatalogCompleteEventArg : EventArgs
+    {
+        public Exercise[] Exercises;
+
+        public CatalogCompleteEventArg(Exercise[] exercises)
+        {
+            Exercises = exercises;
+        }
+    }
+
     public class CatalogManager : IGameComponent
     {
-        public DataTable DataTable { get; set; }
 
         #region event stuff
-        public event CatalogSelectionStatusChanged CatalogSelectionStatusChanged;
 
+        public event CatalogCompleteEventHandler CatalogCompleteEventHandler;
+        // Invoke the Completion event; calle whenever the catalog creation has completed.
+        protected virtual void OnCatalogComplete(CatalogCompleteEventArg e)
+        {
+            if (CatalogCompleteEventHandler != null)
+            {
+                CatalogCompleteEventHandler(this, e);
+            }
+        }
+
+        public event CatalogSelectionStatusChanged CatalogSelectionStatusChanged;
         // Invoke the Changed event; called whenever the catalog status changes
         protected virtual void OnRecordingStatusChanged(CatalogSelectionChangedEventArg e)
         {
             if (CatalogSelectionStatusChanged != null)
+            {
                 CatalogSelectionStatusChanged(this, e);
+            }
         }
 
         #endregion
 
-        public CatalogManagerStatus Status { get; internal set; }
+        private string _catalogFile;
+        public string CatalogFile { get; set; }
 
-        public bool IsWorkoutClicked { get; set; }
-        public bool IsExerciseClicked { get; set; }
+        /// <summary>
+        /// The current list of workouts selected. Generated into exercise objects once completed.
+        /// This is what the UI would be populating/depopulating when assigning exercises to the workout.
+        /// Maybe this should be bound to in the UI?
+        /// </summary>
+        public List<string> WorkoutList { get; set; }
 
-        private List<string> _workoutList;
+        private CatalogManagerStatus _status;
+        public CatalogManagerStatus Status
+        {
+            get { return _status; }
 
-        // Initialize catalog variables
-        private const string CatalogDirectory = @"C:\Project Backups\KinectTherapySolution\KinectTherapy\KinectTherapyContent\Exercises\";
+            internal set
+            {
+                if (_status != value)
+                {
+                    switch (value)
+                    {
+                        case CatalogManagerStatus.Cancel:
+                            {
+                                // do cancel case
+                                break;
+                            }
+                        case CatalogManagerStatus.Start:
+                            {
+                                // do start case
+                                break;
+                            }
+                        case CatalogManagerStatus.Complete:
+                            {
+                                OnCatalogComplete(GetCurrentWorkout());
+                                break;
+                            }
+                    }
+                }
+                _status = value;
+            }
+        }
+
+        private string CatalogDirectory = System.AppDomain.CurrentDomain.BaseDirectory + "/GitHub/KinectTherapyTest/KinectTherapyContent/Exercises/";
         private const string XmlHeader = @"<?xml version=""1.0"" encoding=""utf-8"" ?>";
 
+        private string _exerciseGroup { get; set; }
+
+        /// <summary>   
+        /// The master list of exercises
+        /// </summary>
+        public DataTable DataTable { get; internal set; }
+
+        public CatalogManager()
+        {
+            _status = CatalogManagerStatus.Start;
+            // Initialize catalog variables 
+            var applicationDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            _catalogFile = applicationDirectory + "/GitHub/KinectTherapyTest/KinectTherapyContent/Exercises/";
+            CatalogFile = _catalogFile;
+            WorkoutList = new List<string>();
+            // load the datatable. 
+            CatalogXmlLinqData();
+        }
 
         public void Initialize()
         {
         }
 
-        public void SelectionStart()
-        {
-            Status = CatalogManagerStatus.Start;
-        }
-
-        public void SelectionStop(object sender, EventArgs e)
-        {
-            Status = CatalogManagerStatus.Complete;
-        }
-
-        public DataTable CatalogXmlLinqData()
+        /// <summary>
+        /// Pulls the xml from the MasterCatalog and adds to a DataTable object.
+        /// 
+        /// The DataTable will contain the master list of exercises.
+        /// </summary>
+        public void CatalogXmlLinqData()
         {
             var catalogList =
                 from c in XDocument.Load(CatalogDirectory + @"MasterCatalog.xml").Descendants("Exercise")
                 select new
-                    {
-                        xmlFile = c.Attribute("Id").Value
-                    };
+                {
+                    xmlFile = c.Attribute("Id").Value
+                };
 
             var xmlFileList = catalogList.ToList();
             var xmlFileName = new List<string>(xmlFileList.Count);
@@ -91,11 +167,9 @@ namespace SWENG.Service
             DataTable = new DataTable("ExerciseCatalog");
 
             DataTable.Columns.Add("Id");
-            DataTable.Columns.Add("Catagory");
+            DataTable.Columns.Add("Category");
             DataTable.Columns.Add("Name");
             DataTable.Columns.Add("Description");
-
-            var catalogArray = new Array[4];
 
             foreach (var fileName in xmlFileName)
             {
@@ -107,71 +181,76 @@ namespace SWENG.Service
                         e.Attribute("Id").Value
 
                     select new
-                        {
-                            Id = s.Attribute("Id").Value,
-                            Category = e.Attribute("Category").Value,
-                            Name = s.Attribute("Name").Value,
-                            Description = e.Attribute("Description").Value
-                        };
+                    {
+                        Id = s.Attribute("Id").Value,
+                        Category = e.Attribute("Category").Value,
+                        Name = s.Attribute("Name").Value,
+                        Description = e.Attribute("Description").Value
+                    };
 
                 foreach (var s in query)
                 {
                     DataTable.Rows.Add(s.Id, s.Category, s.Name, s.Description);
                 }
             }
-
-            return DataTable;
         }
 
-        public List<string> ListWorkoutExercises(string exerciseGroup, DataTable dataTable)
+        /// <summary>
+        /// Generates the string list of exercises into Exercise objects.
+        /// </summary>
+        /// <returns></returns>
+        public Exercise[] ListWorkoutExercises()
         {
-            _workoutList = new List<string>();
+            Exercise[] workout = new Exercise[WorkoutList.Count()];
+            int i = 0;
+            foreach (var exercise in WorkoutList)
+            {
+                Exercise e = new Exercise();
+                e.Id = exercise;
+                workout[i++] = e;
+            }
 
+            return workout;
+        }
+
+        /// <summary>
+        /// This will generate the Exercise objects which will be overlayed on the default Exercises loaded in the ExerciseQueue
+        /// Used by the OnCatalogComplete event
+        /// </summary>
+        /// <returns></returns>
+        public CatalogCompleteEventArg GetCurrentWorkout()
+        {
+            // ************* take this out, hardcoding workout for now **************
+            WorkoutList.Add("EXELAE");
+            // **********************************************************************
+            var exerciseList = ListWorkoutExercises();
+            var eventArgs = new CatalogCompleteEventArg(exerciseList);
+            return eventArgs;
+        }
+
+        /// <summary>
+        /// Retrieves the Exercises by Exercise Group it should probably return more than just the ids, 
+        /// but it will work for now.
+        /// </summary>
+        /// <param name="exerciseGroup"></param>
+        /// <returns></returns>
+        public List<string> GetExercisesByType(string exerciseGroup)
+        {
+            var _workoutList = new List<string>();
             try
             {
-                var dataRow = dataTable.Select("Category = '" + exerciseGroup + "'");
-
+                var dataRow = DataTable.Select("Category = '" + exerciseGroup + "'");
                 foreach (var row in dataRow)
                 {
                     _workoutList.Add(row["Id"].ToString());
                 }
-
             }
             catch (Exception)
             {
                 _workoutList = null;
                 throw;
             }
-
             return _workoutList;
-
-        }
-
-        public XmlReader ListWorkoutExerciseObjects(List<string> exerciseList)
-        {
-            var fileContents = String.Empty;
-            var startPos = 0;
-
-            foreach (var sr in exerciseList.Select(item => new FileStream(CatalogDirectory + item + @".xml", FileMode.Open, FileAccess.Read)).Select(fs => new StreamReader(fs)))
-            {
-                fileContents = fileContents.Insert(startPos, sr.ReadToEnd());
-
-                startPos = (int)(fileContents.Length);
-            }
-
-            // Remove all occurences of Xml Header that was inserted due to processing multiple files
-            fileContents = fileContents.Replace(XmlHeader, "");
-
-            // Put header back in for proper xml formatting
-            fileContents = fileContents.Insert(0, XmlHeader);
-
-            // Add root node
-            fileContents = fileContents.Insert(XmlHeader.Length, "<Exercises>");
-            fileContents = fileContents + "</Exercises>";
-
-            var xmlReader = XmlReader.Create(fileContents);
-
-            return xmlReader;
         }
     }
 }

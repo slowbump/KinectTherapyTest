@@ -11,7 +11,7 @@ namespace KinectTherapyUnitTesting
     public class CatalogExerciseXmlTestFixture
     {
         private CatalogManager _catalogManager;
-        private const string CatalogDirectory = @"/GitHub/KinectTherapyTest/KinectTherapyContent/Exercises/";
+        private string CatalogDirectory = System.AppDomain.CurrentDomain.BaseDirectory + "/GitHub/KinectTherapyTest/KinectTherapyContent/Exercises/";
 
         [Test]
         public void CatalogXmlLoaded()
@@ -19,7 +19,7 @@ namespace KinectTherapyUnitTesting
             //var dataTable = new DataTable();
             _catalogManager = new CatalogManager();
 
-            var dataTable = _catalogManager.CatalogXmlLinqData();
+            var dataTable = _catalogManager.DataTable;
             Assert.Pass("CatalogManager.CatalogXmlLinqData() passed.");
         }
 
@@ -49,25 +49,26 @@ namespace KinectTherapyUnitTesting
 
             _catalogManager = new CatalogManager();
 
-            var testListResults = _catalogManager.ListWorkoutExercises("Arms", dataTable);
+            var testListResults = _catalogManager.GetExercisesByType("Arms");
 
             CollectionAssert.AreEqual(testListComparer, testListResults);
         }
 
-        [Test]
-        public void AreExerciseXmlEquivalent()
-        {
-            var exerciseList = new List<string> {"EXELAE", "EXERAE"};
+        //[Test]
+        // deprecated test based on refactoring
+        //public void AreExerciseXmlEquivalent()
+        //{
+        //    var exerciseList = new List<string> {"EXELAE", "EXERAE"};
 
-            var expectedXmlDocument = new XmlDocument();
-            expectedXmlDocument.Load(CatalogDirectory + @"EXELAE.xml");
+        //    var expectedXmlDocument = new XmlDocument();
+        //    expectedXmlDocument.Load(CatalogDirectory + @"EXELAE.xml");
 
-            _catalogManager = new CatalogManager();
+        //    _catalogManager = new CatalogManager();
 
-            var actualXmlDocument = _catalogManager.ListWorkoutExerciseObjects(exerciseList);
+        //    var actualXmlDocument = _catalogManager.ListWorkoutExerciseObjects(exerciseList);
 
-           StringAssert.AreEqualIgnoringCase(expectedXmlDocument.ToString(), actualXmlDocument.ToString());
-        }
+        //   StringAssert.AreEqualIgnoringCase(expectedXmlDocument.ToString(), actualXmlDocument.ToString());
+        //}
 
     }
 }
