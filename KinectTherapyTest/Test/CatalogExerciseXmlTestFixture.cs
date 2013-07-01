@@ -26,7 +26,10 @@ namespace KinectTherapyUnitTesting
         [Test]
         public void AreExerciseListsEquivalent()
         {
-            var testListComparer = new List<string> { "EXERAE", "EXELAE" };
+            var testListComparer = new List<CatalogItem> {
+               new CatalogItem("EXELAE","Left Arm Extensions","Move Left arm from upright to fully extended"),
+               new CatalogItem("EXERAE","Reft Arm Extensions","Move Right arm from upright to fully extended")
+            };
 
             var dataTable = new DataTable("ExerciseCatalog");
             dataTable.Columns.Add("Id");
@@ -50,8 +53,10 @@ namespace KinectTherapyUnitTesting
             _catalogManager = new CatalogManager();
 
             var testListResults = _catalogManager.GetExercisesByType("Arms");
-
-            CollectionAssert.AreEqual(testListComparer, testListResults);
+            System.Console.WriteLine(testListComparer[0].ToString());
+            System.Console.WriteLine(testListResults[0].ToString());
+            //Assert.AreEqual(testListComparer[0], testListResults[0]);
+            CollectionAssert.AreEquivalent(testListComparer, testListResults);
         }
 
         //[Test]
