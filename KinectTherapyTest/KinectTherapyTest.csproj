@@ -68,6 +68,7 @@
     <Compile Include="Service\SkeletonPool.cs" />
     <Compile Include="SkeletonStamp.cs" />
     <Compile Include="Test\CatalogExerciseXmlTestFixture.cs" />
+    <Compile Include="Test\ExerciseTest.cs" />
     <Compile Include="Test\ExerciseQueueTest.cs" />
     <Compile Include="Test\JointAnalyzerTest.cs" />
   </ItemGroup>

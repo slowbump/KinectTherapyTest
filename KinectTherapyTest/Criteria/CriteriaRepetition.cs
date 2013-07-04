@@ -115,7 +115,7 @@ namespace SWENG.Criteria
 
         public double[] checkForm(SkeletonStamp skeletonStamp)
         {
-            return Exercise.checkForm(skeletonStamp);
+            return Exercise.CheckForm(skeletonStamp);
         }
     }
 }

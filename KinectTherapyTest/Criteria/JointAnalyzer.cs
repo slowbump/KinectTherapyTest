@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.Kinect;
 using Microsoft.Xna.Framework;
-using NUnit.Framework;
 using System.Diagnostics;
 
 namespace SWENG.Criteria
@@ -37,7 +36,14 @@ namespace SWENG.Criteria
             // Normalize vectors so we can use Dot product correctly
             vector0.Normalize();
             vector1.Normalize();
-            return Vector3.Dot(vector0, vector1);
+            float dot = Vector3.Dot(vector0, vector1);
+
+            // must be the same point so return 0
+            if (float.IsNaN(dot))
+            {
+                dot = 0;
+            }
+            return dot;
         }
 
         /// <summary>
@@ -161,7 +167,14 @@ namespace SWENG.Criteria
             vector0.Normalize();
             vector1.Normalize();
             float dotAngle = (float)Math.Acos(Vector3.Dot(vector0, vector1));
-            int convertedDotAngle = Convert.ToInt32(dotAngle * (180.0 / Math.PI));
+            int convertedDotAngle;
+
+            // got into a NaN situation when leaving the screen
+            if (!float.IsNaN(dotAngle))
+                convertedDotAngle = Convert.ToInt32(dotAngle * (180.0 / Math.PI));
+            else
+                convertedDotAngle = 0;
+
             return convertedDotAngle;
         }
     }

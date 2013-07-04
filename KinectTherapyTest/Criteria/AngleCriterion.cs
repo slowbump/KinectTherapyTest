@@ -80,5 +80,10 @@ namespace SWENG.Criteria
             Debug.WriteLine("Vertex: " + vertexJoint.JointType.ToString() + " Angle: " + convertedDotAngle + " Min: " + MinimumAngle + " Max: " + MaximumAngle);
             return convertedDotAngle > MinimumAngle && convertedDotAngle < MaximumAngle;
         }
+
+        public override double[] CheckForm(SkeletonStamp skeletonStamp)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

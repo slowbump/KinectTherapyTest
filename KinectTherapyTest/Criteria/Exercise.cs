@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Kinect;
 using System.Collections;
 using System.Xml.Serialization;
+using System.Diagnostics;
 
 namespace SWENG.Criteria
 {
@@ -39,7 +40,34 @@ namespace SWENG.Criteria
         public string Description { get; set; }
         [XmlAttribute("Category")]
         public string Category { get; set; }
+        [XmlAttribute("Variance")]
+        public float Variance
+        {
+            get
+            {
+                return _variance;
+            }
 
+            set
+            {
+                // must set the variance of all the criterion as well
+                foreach (Checkpoint cp in Checkpoints)
+                {
+                    UpdateVariance(value, cp.Criteria);
+                }
+                UpdateVariance(value, StartingCriteria);
+                UpdateVariance(value, TrackingCriteria);
+                _variance = value;
+            }
+        }
+        private float _variance; 
+        private void UpdateVariance(float newVariance, Criterion[] Criteria)
+        {
+            foreach (Criterion criterion in Criteria)
+            {
+                criterion.Variance = newVariance;
+            }
+        }
         /// <summary>
         /// Empty Constructor Needed for XmlSerializer
         /// </summary>
@@ -48,27 +76,37 @@ namespace SWENG.Criteria
         }
 
         /// <summary>
-        /// Move this to an interface
         /// Check form will validate all the tracked joints based on the criteria provided by trackedJoints
-        ///
+        /// Joints which are not compared are considered perfectly accurate (0) 
         /// </summary>
-        /// <param name="original">The skeleton provided at the start of the repetition</param>
-        /// <param name="current">The current skeleton during the repetition</param>
         /// <returns></returns>
-        public double[] checkForm(SkeletonStamp skeletonStamp)
+        public double[] CheckForm(SkeletonStamp skeletonStamp)
         {
             double[] jointAccuracy = new double[20];
-            // loop through each joint and determine if it is bad or 
+            /* Keeps track of how many times the joint has been updated */
+            double[] timesJointUpdated = new double[20];
+            /** loop through each Criterion and determine if it is bad or not */
+            /** aggregate all the results */
             foreach (Criterion criterion in TrackingCriteria)
             {
-                double percentBad = 0.0;
-                if (!criterion.matchesCriterion(skeletonStamp))
+                double[] result = criterion.CheckForm(skeletonStamp);
+
+                for (int i = 0; i < jointAccuracy.Length; i++)
                 {
-                    percentBad = 1.0;
+                    if (result[i] != -999)
+                    {
+                        jointAccuracy[i] += result[i];
+                        timesJointUpdated[i]++;
+                    }
+
                 }
-                // store into an array indexed by joint id. 
-                //jointAccuracy[(int)trackedJoint.Key] = percentBad;
             }
+            /* Take the average result based on the amount of times a joint was updated */
+            for (int i = 0; i < jointAccuracy.Length; i++)
+            {
+                jointAccuracy[i] = jointAccuracy[i] / timesJointUpdated[i];
+            }
+            /** Joints which are not compared are considered perfectly accurate (0) */
             return jointAccuracy;
         }
 
