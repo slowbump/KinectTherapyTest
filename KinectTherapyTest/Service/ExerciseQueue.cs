@@ -62,8 +62,7 @@ namespace SWENG.Service
         public ExerciseQueue(Game game)
         {
             _game = game;
-            PendingExercises = new Queue<ExerciseGameComponent>();
-            CompletedExercises = new Queue<ExerciseGameComponent>();
+            ReInitialize();
             RepetitionStartedListener = new List<StartedRepetitionEventHandler>();
 
             // The queue will require fewer updates if it responds to the event
@@ -87,6 +86,12 @@ namespace SWENG.Service
             // Leaving stubbed out for now.
         }
 
+        private void ReInitialize()
+        {
+            PendingExercises = new Queue<ExerciseGameComponent>();
+            CompletedExercises = new Queue<ExerciseGameComponent>();
+        }
+
         /// <summary>
         /// When the catalog notifies that the Exercises have been loaded and the patient is ready to exercise,
         /// The exercise queue will load up the exercises pushed into the CurrentCatalog. 
@@ -95,19 +100,28 @@ namespace SWENG.Service
         /// <returns></returns>
         public void LoadExercises(object sender, CatalogCompleteEventArg e)
         {
+            ReInitialize();
             OnLoadStarted(EventArgs.Empty);
             string path = System.AppDomain.CurrentDomain.BaseDirectory + "/GitHub/KinectTherapyTest/KinectTherapyContent/Exercises/";
+            //string path = System.AppDomain.CurrentDomain.BaseDirectory + "../../../../KinectTherapyContent/Exercises/";
 
             Exercises = new ExerciseGameComponent[e.Exercises.Length];
 
-             //loop through the exercises in the CurrentCatalog and turn them into Exercise objects. 
+            //loop through the exercises in the CurrentCatalog and turn them into Exercise objects. 
             for (int i = 0; i < e.Exercises.Length; i++)
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Exercise));
                 StreamReader reader = new StreamReader(path + e.Exercises[i].Id + ".xml");
                 // deserialize the xml and create an Exercise
                 Exercise temp = (Exercise)serializer.Deserialize(reader);
-                temp.Repetitions = e.Exercises[i].Repetitions;
+                if (null != e.Exercises[i].Repetitions && e.Exercises[i].Repetitions > 0)
+                {
+                    temp.Repetitions = e.Exercises[i].Repetitions;
+                }
+                if (null != e.Exercises[i].Variance)
+                {
+                    temp.Variance = e.Exercises[i].Variance;
+                }
                 Exercises[i] = new ExerciseGameComponent(_game, temp);
                 reader.Close();
 
