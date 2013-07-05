@@ -19,7 +19,7 @@ namespace SWENG.Criteria
         {
             get
             {
-                return Angle - Variance;
+                return Angle - ((180 * Variance * .01f )/ 2);
             }
         }
                 
@@ -27,7 +27,7 @@ namespace SWENG.Criteria
         {
             get
             {
-                return Angle + Variance;
+                return Angle + ((180 * Variance * .01f) / 2);
             }
         }
 
@@ -70,20 +70,33 @@ namespace SWENG.Criteria
         /// <returns></returns>
         public override bool matchesCriterion(SkeletonStamp skeletonStamp)
         {
+            Joint vertexJoint; Joint[] adjacentJoints;
+            int convertedDotAngle = FindAngle(skeletonStamp, out vertexJoint, out adjacentJoints);
+            return convertedDotAngle > MinimumAngle && convertedDotAngle < MaximumAngle;
+        }
+
+        private int FindAngle(SkeletonStamp skeletonStamp, out Joint vertexJoint, out Joint[] adjacentJoints)
+        {
             // get the vertex and other joints off the skeleton stamp
-            Joint vertexJoint = skeletonStamp.GetTrackedSkeleton().Joints[Vertex.GetJointType()];
-            Joint[] adjacentJoints = new Joint[2];
+            vertexJoint = skeletonStamp.GetTrackedSkeleton().Joints[Vertex.GetJointType()];
+            adjacentJoints = new Joint[2];
             adjacentJoints[0] = skeletonStamp.GetTrackedSkeleton().Joints[OtherJoints[0].GetJointType()];
             adjacentJoints[1] = skeletonStamp.GetTrackedSkeleton().Joints[OtherJoints[1].GetJointType()];
-           
-            int convertedDotAngle = JointAnalyzer.findAngle(vertexJoint,adjacentJoints);
+            int convertedDotAngle = JointAnalyzer.findAngle(vertexJoint, adjacentJoints);
             Debug.WriteLine("Vertex: " + vertexJoint.JointType.ToString() + " Angle: " + convertedDotAngle + " Min: " + MinimumAngle + " Max: " + MaximumAngle);
-            return convertedDotAngle > MinimumAngle && convertedDotAngle < MaximumAngle;
+            return convertedDotAngle;
         }
 
         public override double[] CheckForm(SkeletonStamp skeletonStamp)
         {
-            throw new NotImplementedException();
+            Joint vertexJoint; Joint[] adjacentJoints;
+            int convertedDotAngle = FindAngle(skeletonStamp, out vertexJoint, out adjacentJoints);
+            double normalizedAccuracy = (Angle - convertedDotAngle)/180;
+            double[] results = new double[20];
+            results[(int)vertexJoint.JointType] = normalizedAccuracy;
+            results[(int)adjacentJoints[0].JointType] = normalizedAccuracy;
+            results[(int)adjacentJoints[1].JointType] = normalizedAccuracy;
+            return results;
         }
     }
 }

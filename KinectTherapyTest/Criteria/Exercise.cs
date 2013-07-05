@@ -51,16 +51,25 @@ namespace SWENG.Criteria
             set
             {
                 // must set the variance of all the criterion as well
-                foreach (Checkpoint cp in Checkpoints)
+                if (null != Checkpoints)
                 {
-                    UpdateVariance(value, cp.Criteria);
+                    foreach (Checkpoint cp in Checkpoints)
+                    {
+                        UpdateVariance(value, cp.Criteria);
+                    }
                 }
-                UpdateVariance(value, StartingCriteria);
-                UpdateVariance(value, TrackingCriteria);
+                if (null != StartingCriteria)
+                {
+                    UpdateVariance(value, StartingCriteria);
+                }
+                if (null != TrackingCriteria)
+                {
+                    UpdateVariance(value, TrackingCriteria);
+                }
                 _variance = value;
             }
         }
-        private float _variance; 
+        private float _variance;
         private void UpdateVariance(float newVariance, Criterion[] Criteria)
         {
             foreach (Criterion criterion in Criteria)

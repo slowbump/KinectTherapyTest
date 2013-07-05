@@ -145,6 +145,9 @@ namespace SWENG.Criteria
             #region Matches Alignment
             alignmentExercise.StartingCriteria = new Criterion[] { VerticalAlignmentCriterion };
             Assert.IsTrue(alignmentExercise.matchesCriteria(skeletonStamp,alignmentExercise.StartingCriteria));
+            #endregion
+
+            #region Does Not Match Alignment
             SkeletonPoint misalignedPoint = new SkeletonPoint();
             misalignedPoint.X = 100.0F;
             misalignedPoint.Y = 1.0F;
@@ -168,19 +171,130 @@ namespace SWENG.Criteria
         [TestAttribute]
         public void TestAngleCheckForm()
         {
+            #region Setup Skeleton
+            Skeleton[] skeletonData = new Skeleton[1];
+            Skeleton skeleton = new Skeleton();
+            skeleton.TrackingState = SkeletonTrackingState.Tracked;
+            /* this needs to be done because you can't set properties directly on the skelton's Joint object:
+             * you must create a new joint, 
+             * set the properties,
+             * then set the new joint on the skeleton */
+            SkeletonPoint hipPoint = new SkeletonPoint();
+            hipPoint.X = 1.0F;
+            hipPoint.Y = 1.0F;
+            hipPoint.Z = 1.0F;
+            Joint hip = skeleton.Joints[JointType.HipRight];
+            hip.Position = hipPoint;
+            skeleton.Joints[JointType.HipRight] = hip;
+
+            SkeletonPoint kneePoint = new SkeletonPoint();
+            kneePoint.X = 2.0F;
+            kneePoint.Y = 1.0F;
+            kneePoint.Z = 1.0F;
+            Joint knee = skeleton.Joints[JointType.KneeRight];
+            knee.Position = kneePoint;
+
+            SkeletonPoint anklePoint = new SkeletonPoint();
+            anklePoint.X = 2.0F;
+            anklePoint.Y = 0.0F;
+            anklePoint.Z = 1.0F;
+            skeleton.Joints[JointType.KneeRight] = knee;
+            Joint ankle = skeleton.Joints[JointType.AnkleRight];
+            ankle.Position = anklePoint;
+            skeleton.Joints[JointType.AnkleRight] = ankle;
+            skeletonData[0] = skeleton;
+            SkeletonStamp skeletonStamp = new SkeletonStamp(skeletonData, 1);
+            #endregion
+            Exercise angleExercise = new Exercise();
+
+            #region Angle In Range
+            angleExercise.TrackingCriteria = new Criterion[1] { AngleCriterion };
+            double[] jointImperfection = angleExercise.CheckForm(skeletonStamp);
+            // should be exactly 90 degrees
+            Assert.AreEqual(0, jointImperfection[(int)JointType.KneeRight]);
+            Assert.AreEqual(0, jointImperfection[(int)JointType.HipRight]);
+            Assert.AreEqual(0, jointImperfection[(int)JointType.AnkleRight]);
+            #endregion
+
+            #region Angle Out Of Range
+            // change the skeleton to be out of range
+            SkeletonPoint misalignedPoint = new SkeletonPoint();
+            misalignedPoint.X = 2.0F;
+            misalignedPoint.Y = 0.0F;
+            misalignedPoint.Z = 1.0F;
+            hip = skeleton.Joints[JointType.HipRight];
+            hip.Position = misalignedPoint;
+            skeleton.Joints[JointType.HipRight] = hip;
+            jointImperfection = angleExercise.CheckForm(skeletonStamp);
+            Assert.AreNotEqual(0, jointImperfection[(int)JointType.KneeRight]);
+            Assert.AreNotEqual(0, jointImperfection[(int)JointType.HipRight]);
+            Assert.AreNotEqual(0, jointImperfection[(int)JointType.AnkleRight]);
+            #endregion
         }
 
         [TestAttribute]
         public void TestAngleMatchesCriteria()
         {
-            Assert.IsTrue(false);
+            #region Setup Skeleton
+            Skeleton[] skeletonData = new Skeleton[1];
+            Skeleton skeleton = new Skeleton();
+            skeleton.TrackingState = SkeletonTrackingState.Tracked;
+            /* this needs to be done because you can't set properties directly on the skelton's Joint object:
+             * you must create a new joint, 
+             * set the properties,
+             * then set the new joint on the skeleton */
+            SkeletonPoint hipPoint = new SkeletonPoint();
+            hipPoint.X = 1.0F;
+            hipPoint.Y = 1.0F;
+            hipPoint.Z = 1.0F;
+            Joint hip = skeleton.Joints[JointType.HipRight];
+            hip.Position = hipPoint;
+            skeleton.Joints[JointType.HipRight] = hip;
+
+            SkeletonPoint kneePoint = new SkeletonPoint();
+            kneePoint.X = 2.0F;
+            kneePoint.Y = 1.0F;
+            kneePoint.Z = 1.0F;
+            Joint knee = skeleton.Joints[JointType.KneeRight];
+            knee.Position = kneePoint;
+
+            // slightly off 90 but should still match
+            SkeletonPoint anklePoint = new SkeletonPoint();
+            anklePoint.X = 2.0F;
+            anklePoint.Y = 0.01F;
+            anklePoint.Z = 1.0F;
+            skeleton.Joints[JointType.KneeRight] = knee;
+            Joint ankle = skeleton.Joints[JointType.AnkleRight];
+            ankle.Position = anklePoint;
+            skeleton.Joints[JointType.AnkleRight] = ankle;
+            skeletonData[0] = skeleton;
+            SkeletonStamp skeletonStamp = new SkeletonStamp(skeletonData, 1);
+            #endregion
+            Exercise angleExercise = new Exercise();
+
+            #region Angle Matches
+            angleExercise.StartingCriteria = new Criterion[1] { AngleCriterion };
+            Assert.IsTrue(angleExercise.matchesCriteria(skeletonStamp,angleExercise.StartingCriteria));
+            #endregion
+
+            #region Angle Does Not Match
+            SkeletonPoint misalignedPoint = new SkeletonPoint();
+            misalignedPoint.X = 2.0F;
+            misalignedPoint.Y = 0.0F;
+            misalignedPoint.Z = 1.0F;
+            hip = skeleton.Joints[JointType.HipRight];
+            hip.Position = misalignedPoint;
+            skeleton.Joints[JointType.HipRight] = hip;
+            Assert.IsFalse(angleExercise.matchesCriteria(skeletonStamp, angleExercise.StartingCriteria));
+            #endregion  
         }
 
         [TestAttribute]
         public void TestAngleMinMaxCorrect()
         {
             // Tests to make sure the min value and max value are correct based on a given Variance
-            Assert.IsTrue(false);
+            Assert.AreEqual(90 + ((180 * TestVariance * .01f) / 2), AngleCriterion.MaximumAngle);
+            Assert.AreEqual(90 - ((180 * TestVariance * .01f) / 2), AngleCriterion.MinimumAngle);
         }
 
         [TestAttribute]
