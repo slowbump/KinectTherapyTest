@@ -59,6 +59,7 @@
     <Compile Include="Criteria\Exercise.cs" />
     <Compile Include="Criteria\IRepetition.cs" />
     <Compile Include="Criteria\JointAnalyzer.cs" />
+    <Compile Include="Criteria\Operation.cs" />
     <Compile Include="Criteria\XmlJointType.cs" />
     <Compile Include="ExerciseGameComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

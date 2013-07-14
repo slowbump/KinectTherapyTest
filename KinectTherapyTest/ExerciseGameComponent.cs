@@ -38,7 +38,7 @@ namespace SWENG
             }
         }
 
-        private Exercise Exercise;
+        private Exercise _exercise;
         public Boolean RepetitionComplete { get; internal set; }
         
         public Boolean RepetitionStarted 
@@ -61,6 +61,7 @@ namespace SWENG
         }
         
         public int Repetitions { get; internal set; }
+        public int RepetitionsToComplete { get { return _exercise.Repetitions; } }
         public string Name { get; internal set; }
         public Repetition repetition;
 
@@ -70,12 +71,12 @@ namespace SWENG
         public ExerciseGameComponent(Game game,Exercise exercise)
             : base(game)
         {
-            this.RepetitionComplete = false;
-            this.RepetitionStarted = false;
-            this.Repetitions = 0;
-            this.Exercise = exercise;
-            this.Name = exercise.Name;
-            this.repetition = new Repetition(exercise);
+            RepetitionComplete = false;
+            RepetitionStarted = false;
+            Repetitions = 0;
+            _exercise = exercise;
+            Name = exercise.Name;
+            repetition = new Repetition(exercise);
             RepetitionToFileId = new List<string>();
         }
 
@@ -88,7 +89,7 @@ namespace SWENG
         {
 
             // the stamp being processed
-            SkeletonStamp skeletonStamp=skeletonPool.GetOldestSkeleton();
+            SkeletonStamp skeletonStamp=skeletonPool.GetOldestActiveSkeleton();
             double[] percentBad = new double[20]; 
 
             // determine whether a rep has been started based on Exercise Start Criteria.
@@ -97,7 +98,7 @@ namespace SWENG
                 if (!RepetitionStarted)
                 {
                     // initialize the checkpoint to the 0 based checkpoint. 
-                    repetition.Checkpoint = Exercise.Checkpoints.Length;
+                    repetition.Checkpoint = _exercise.Checkpoints.Length;
                     RepetitionStarted = repetition.isRepStarted(skeletonStamp);
                 }
                 else
@@ -106,10 +107,7 @@ namespace SWENG
                     // A couple updates could occur before the next draw. 
                     if (!RepetitionComplete)
                     {
-                        // if the rep has been started we need to check the form of the repetition
-                        // just a stub of what needs to be done... we'll need to determine how a FormResponse should look. 
-                        percentBad = repetition.checkForm(skeletonStamp);
-
+                        
                         // see if the rep has been completed
                         if (RepetitionComplete = repetition.isRepComplete(skeletonStamp))
                         {
@@ -117,15 +115,19 @@ namespace SWENG
                             Repetitions++;
                             RepetitionComplete = RepetitionStarted = false;
                             // remove all the skeletons before this skeleton
-                            skeletonPool.Remove(skeletonStamp.TimeStamp);
+                            skeletonPool.FinishedWithSkeleton(skeletonStamp.TimeStamp);
                         }
                     }
                 }
+                // if the rep has been started we need to check the form of the repetition
+                // just a stub of what needs to be done... we'll need to determine how a FormResponse should look. 
+                percentBad = repetition.checkForm(skeletonStamp);
+                skeletonStamp.PercentBad = percentBad;
             }
             // remove the skeleton stamp so it can move on
             if (skeletonStamp != null)
             {
-                skeletonPool.Remove(skeletonStamp.TimeStamp);
+                skeletonPool.FinishedWithSkeleton(skeletonStamp.TimeStamp);
             }
 
             base.Update(gameTime);
@@ -133,7 +135,7 @@ namespace SWENG
 
         public bool isExerciseComplete()
         {
-            return Repetitions >= Exercise.Repetitions;
+            return Repetitions >= _exercise.Repetitions;
         }
     }
 }

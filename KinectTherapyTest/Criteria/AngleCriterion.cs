@@ -13,16 +13,16 @@ namespace SWENG.Criteria
     /// Criteria for an angle between 3 joints
     /// </summary>
     [Serializable()]
-    public class AngleCriterion:Criterion
+    public class AngleCriterion : Criterion
     {
         public float MinimumAngle
         {
             get
             {
-                return Angle - ((180 * Variance * .01f )/ 2);
+                return Angle - ((180 * Variance * .01f) / 2);
             }
         }
-                
+
         public float MaximumAngle
         {
             get
@@ -32,12 +32,14 @@ namespace SWENG.Criteria
         }
 
         [XmlAttribute("Angle")]
-        public float Angle {get;set;}
+        public float Angle { get; set; }
         [XmlElement("Vertex")]
         public XmlJointType Vertex { get; set; }
         [XmlArray("AdjacentJoints")]
         [XmlArrayItem("Joint", typeof(XmlJointType))]
         public XmlJointType[] OtherJoints { get; set; }
+        [XmlAttribute("Operation")]
+        public Operation Operation { get; set; }
 
         /// <summary>
         /// Empty Constructor Needed for XmlSerializer
@@ -52,12 +54,13 @@ namespace SWENG.Criteria
         /// <param name="angle"></param>
         /// <param name="vertex"></param>
         /// <param name="otherJoints"></param>
-        public AngleCriterion(float angle, XmlJointType vertex, XmlJointType[] otherJoints,float variance):base(variance)
+        public AngleCriterion(float angle, XmlJointType vertex, XmlJointType[] otherJoints, float variance)
+            : base(variance)
         {
             this.Angle = angle;
             this.Vertex = vertex;
             this.OtherJoints = new XmlJointType[2];
-            for(int i = 0;i<2;i++)
+            for (int i = 0; i < 2; i++)
             {
                 this.OtherJoints[i] = otherJoints[i];
             }
@@ -77,8 +80,15 @@ namespace SWENG.Criteria
 
         private int FindAngle(SkeletonStamp skeletonStamp, out Joint vertexJoint, out Joint[] adjacentJoints)
         {
+            // Test bone orientations
+            Skeleton skeleton = skeletonStamp.GetTrackedSkeleton();
+            BoneOrientation bo = skeleton.BoneOrientations[Vertex.GetJointType()];
+            Debug.WriteLine("Bone Orientation: abs: " + bo.AbsoluteRotation.ToString() + " end: " + bo.EndJoint.ToString() + " start: " + bo.StartJoint.ToString() + " hier: " + bo.HierarchicalRotation.ToString());
+
+
             // get the vertex and other joints off the skeleton stamp
             vertexJoint = skeletonStamp.GetTrackedSkeleton().Joints[Vertex.GetJointType()];
+            
             adjacentJoints = new Joint[2];
             adjacentJoints[0] = skeletonStamp.GetTrackedSkeleton().Joints[OtherJoints[0].GetJointType()];
             adjacentJoints[1] = skeletonStamp.GetTrackedSkeleton().Joints[OtherJoints[1].GetJointType()];
@@ -91,7 +101,26 @@ namespace SWENG.Criteria
         {
             Joint vertexJoint; Joint[] adjacentJoints;
             int convertedDotAngle = FindAngle(skeletonStamp, out vertexJoint, out adjacentJoints);
-            double normalizedAccuracy = (Angle - convertedDotAngle)/180;
+
+            double normalizedAccuracy = 0;
+            switch (Operation)
+            {
+                case Operation.GreaterThan:
+                    if (convertedDotAngle < MinimumAngle)
+                    {
+                        normalizedAccuracy = (Angle - convertedDotAngle) / 180;
+                    }
+                    break;
+                case Operation.LessThan:
+                    if (convertedDotAngle > MaximumAngle)
+                    {
+                        normalizedAccuracy = (Angle - convertedDotAngle) / 180;
+                    }
+                    break;
+                case Operation.Equals:
+                    normalizedAccuracy = (Angle - convertedDotAngle) / 180;
+                    break;
+            }
             double[] results = new double[20];
             results[(int)vertexJoint.JointType] = normalizedAccuracy;
             results[(int)adjacentJoints[0].JointType] = normalizedAccuracy;

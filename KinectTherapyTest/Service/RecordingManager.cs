@@ -52,8 +52,6 @@ namespace SWENG.Service
         private FileStream recordingStream;
         private FileStream replayStream;
 
-        private XmlWriter xmlWriter;
-
         private string fileLocation;
         public Dictionary<string, string> filesUsed { get; internal set; }
         public RecordingManagerStatus Status { get; internal set; }
@@ -71,6 +69,8 @@ namespace SWENG.Service
             filesUsed = new Dictionary<string, string>();
             Status = Service.RecordingManagerStatus.Standby;
             SkeletonEventListener = new List<EventHandler<ReplaySkeletonFrameReadyEventArgs>>();
+            ColorEventListener = new List<EventHandler<ReplayColorImageFrameReadyEventArgs>>();
+            DepthEventListener = new List<EventHandler<ReplayDepthImageFrameReadyEventArgs>>();
         }
 
         public void Initialize()
@@ -133,23 +133,48 @@ namespace SWENG.Service
                 kinectReplay.Dispose();
             }
 
-            foreach (EventHandler<ReplaySkeletonFrameReadyEventArgs> eventHandler 
-                in SkeletonEventListener)
+            if (null != SkeletonEventListener)
             {
-                kinectReplay.SkeletonFrameReady -= eventHandler;
+                foreach (EventHandler<ReplaySkeletonFrameReadyEventArgs> eventHandler
+                    in SkeletonEventListener)
+                {
+                    kinectReplay.SkeletonFrameReady -= eventHandler;
+                }
+            }
+
+            if (null != ColorEventListener)
+            {
+                foreach (EventHandler<ReplayColorImageFrameReadyEventArgs> eventHandler
+                    in ColorEventListener)
+                {
+                    kinectReplay.ColorImageFrameReady -= eventHandler;
+                }
             }
 
             replayStream = new FileStream(
-                filesUsed[fileId], 
+                filesUsed[fileId],
                 FileMode.Open,
                 FileAccess.Read
             );
+
             kinectReplay = new KinectReplay(replayStream);
 
-            foreach (EventHandler<ReplaySkeletonFrameReadyEventArgs> eventHandler
-                in SkeletonEventListener)
+            if (null != SkeletonEventListener)
             {
-                kinectReplay.SkeletonFrameReady += eventHandler;
+                foreach (EventHandler<ReplaySkeletonFrameReadyEventArgs> eventHandler
+                    in SkeletonEventListener)
+                {
+                    kinectReplay.SkeletonFrameReady += eventHandler;
+                }
+            }
+
+            if (null != ColorEventListener)
+            {
+                foreach (EventHandler<ReplayColorImageFrameReadyEventArgs> eventHandler
+                    in ColorEventListener)
+                {
+                    kinectReplay.ColorImageFrameReady += eventHandler;
+                }
             }
 
             kinectReplay.Start();
@@ -207,7 +232,7 @@ namespace SWENG.Service
         /// <param name="args"></param>
         public void StartRecording(object sender, EventArgs args)
         {
-            StartRecording(KinectRecordOptions.Skeletons);
+            StartRecording(KinectRecordOptions.Skeletons | KinectRecordOptions.Color);
         }
 
         /// <summary>

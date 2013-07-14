@@ -24,7 +24,7 @@ namespace SWENG.Criteria
             FileId = fileId;
         }
     }
-    public class Repetition:IRepetition
+    public class Repetition : IRepetition
     {
 
         #region event stuff
@@ -48,7 +48,7 @@ namespace SWENG.Criteria
         {
             get
             {
-                return 
+                return
                     _checkpoint;
             }
             internal set
@@ -76,7 +76,7 @@ namespace SWENG.Criteria
         /// <returns></returns>
         public bool isRepStarted(SkeletonStamp skeletonStamp)
         {
-            bool matches = Exercise.matchesCriteria(skeletonStamp,Exercise.StartingCriteria);
+            bool matches = Exercise.matchesCriteria(skeletonStamp, Exercise.StartingCriteria);
             if (matches)
             {
                 startTime = DateTime.Now;
@@ -96,7 +96,7 @@ namespace SWENG.Criteria
         {
             bool matches = false;
 
-            matches = Exercise.matchesCriteria(skeletonStamp,Exercise.Checkpoints[_checkpoint].Criteria);
+            matches = Exercise.matchesCriteria(skeletonStamp, Exercise.Checkpoints[_checkpoint].Criteria);
             if (matches)
             {
                 // increment the checkpoint
@@ -109,7 +109,7 @@ namespace SWENG.Criteria
                     return true;
                 }
             }
-            
+
             return false;
         }
 
