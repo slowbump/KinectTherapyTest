@@ -12,7 +12,7 @@ namespace SWENG.Service
     public enum CatalogManagerStatus
     {
         Complete,
-        Start,
+        Selecting,
         Cancel
     }
 
@@ -86,7 +86,7 @@ namespace SWENG.Service
     {
 
         #region event stuff
-
+        
         public event CatalogCompleteEventHandler CatalogCompleteEventHandler;
         // Invoke the Completion event; calle whenever the catalog creation has completed.
         protected virtual void OnCatalogComplete(CatalogCompleteEventArg e)
@@ -134,7 +134,7 @@ namespace SWENG.Service
                                 // do cancel case
                                 break;
                             }
-                        case CatalogManagerStatus.Start:
+                        case CatalogManagerStatus.Selecting:
                             {
                                 // do start case
                                 break;
@@ -149,8 +149,8 @@ namespace SWENG.Service
                 _status = value;
             }
         }
-        private string CatalogDirectory = System.AppDomain.CurrentDomain.BaseDirectory + "/GitHub/KinectTherapyTest/KinectTherapyContent/Exercises/";
-        //private string CatalogDirectory = System.AppDomain.CurrentDomain.BaseDirectory + "../../../../KinectTherapyContent/Exercises/";
+
+        private string CatalogDirectory = System.AppDomain.CurrentDomain.BaseDirectory + "../../../../KinectTherapyContent/Exercises/";
         private const string XmlHeader = @"<?xml version=""1.0"" encoding=""utf-8"" ?>";
 
         public string[] Categories { get; internal set; }
@@ -162,11 +162,10 @@ namespace SWENG.Service
 
         public CatalogManager()
         {
-            _status = CatalogManagerStatus.Start;
+            _status = CatalogManagerStatus.Selecting;
             // Initialize catalog variables 
             var applicationDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            CatalogFile = applicationDirectory + "/GitHub/KinectTherapyTest/KinectTherapyContent/Exercises/";
-            //CatalogFile = applicationDirectory + "../../../../KinectTherapyContent/Exercises/MasterCatalog.xml";
+            CatalogFile = applicationDirectory + "../../../../KinectTherapyContent/Exercises/MasterCatalog.xml";
             _workoutList = new List<Exercise>();
             // load the datatable.
             CatalogXmlLinqData();
@@ -235,7 +234,7 @@ namespace SWENG.Service
         /// Add an exercise to the current list if it does not exist already
         /// </summary>
         /// <param name="exerciseId"></param>
-        public void AddExerciseToSelected(string exerciseId)
+        public void AddExerciseToSelected(string exerciseId, string title)
         {
             foreach (Exercise exercise in _workoutList)
             {
@@ -249,18 +248,21 @@ namespace SWENG.Service
                 new Exercise()
                 {
                     Id = exerciseId,
-                    Repetitions = 10
+                    Repetitions = 10,
+                    Variance = 10,
+					Name = title
                 }
             );
         }
 
         public void SetExerciseOptions(Exercise exerciseUpdate)
         {
-            for (int i = 0; i < _workoutList.Count; i = i + 1)
+            for (int i = 0; i < _workoutList.Count; i = i +1)
             {
                 if (_workoutList[i].Id == exerciseUpdate.Id)
                 {
-                    _workoutList[i] = exerciseUpdate;
+                    _workoutList[i].Repetitions = exerciseUpdate.Repetitions;
+                    _workoutList[i].Variance = exerciseUpdate.Variance;
                 }
             }
         }
@@ -338,8 +340,8 @@ namespace SWENG.Service
                     r.Add(
                         new CatalogItem()
                         {
-                            ID = row["Id"].ToString(),
-                            Name = row["Name"].ToString(),
+                            ID = row["Id"].ToString(), 
+                            Name = row["Name"].ToString(), 
                             Description = row["Description"].ToString()
                         }
                     );
@@ -356,7 +358,7 @@ namespace SWENG.Service
 
         public void ClearWorkout()
         {
-            _status = CatalogManagerStatus.Start;
+            _status = CatalogManagerStatus.Selecting;
             _workoutList.Clear();
         }
     }

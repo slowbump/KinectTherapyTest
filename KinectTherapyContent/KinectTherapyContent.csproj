@@ -51,13 +51,75 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <None Include="Arial10.spritefont" />
+    <None Include="Arial16.spritefont" />
+    <None Include="Segoe16.spritefont" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="blank.png" />
+    <Content Include="blank128.png" />
+    <Content Include="Bone.png" />
     <Content Include="Exercises\ArmExtensions.xml" />
     <Content Include="Exercises\EXELAE.xml" />
     <Content Include="Exercises\EXELUNGE.xml" />
     <Content Include="Exercises\EXERAE.xml" />
     <Content Include="Exercises\MasterCatalog.xml" />
+    <Content Include="gradient.png" />
+    <Content Include="Joint.png" />
+    <Content Include="KinectColorVisualizer.fx" />
+    <Content Include="KinectDepthVisualizer.fx" />
+    <Content Include="KinectSensor.png" />
+    <Content Include="UI\Abdomen.png" />
+    <Content Include="UI\Arms.png" />
+    <Content Include="UI\Back.png" />
+    <Content Include="UI\Buttocks.png" />
+    <Content Include="UI\Calves.png" />
+    <Content Include="UI\Cancel.png" />
+    <Content Include="UI\CatalogCheckbox.png" />
+    <Content Include="UI\CatalogEdit.png" />
+    <Content Include="UI\CatalogInstructions.png" />
+    <Content Include="UI\CatalogItemDeviation.png" />
+    <Content Include="UI\CatalogItemRepetitions.png" />
+    <Content Include="UI\CatalogTile.png" />
+    <Content Include="UI\CatalogTileEdit.png" />
+    <Content Include="UI\Categories.png" />
+    <Content Include="UI\Change.png" />
+    <Content Include="UI\Chest.png" />
+    <Content Include="UI\EditSettings.png" />
+    <Content Include="UI\EndQueue.png" />
+    <Content Include="UI\ExercisesTitle.png" />
+    <Content Include="UI\ExerciseTile.png" />
+    <Content Include="UI\ExitProgram.png" />
+    <Content Include="UI\Finished.png" />
+    <Content Include="UI\InputBox.png" />
+    <Content Include="UI\KinectSensor.png" />
+    <Content Include="UI\KinectSensorBad.png" />
+    <Content Include="UI\KinectSensorGood.png" />
+    <Content Include="UI\KinectTherapy.png" />
+    <Content Include="UI\LogIn.png" />
+    <Content Include="UI\LogInHeader.png" />
+    <Content Include="UI\Menu.png" />
+    <Content Include="UI\RepetitionLabel.png" />
+    <Content Include="UI\Repetitions.png" />
+    <Content Include="UI\Replay.png" />
+    <Content Include="UI\ReplayTile.png" />
+    <Content Include="UI\Selected.png" />
+    <Content Include="UI\SensorSetup.png" />
+    <Content Include="UI\SensorSlider.png" />
+    <Content Include="UI\SensorStatus.png" />
+    <Content Include="UI\SensorTileEdit.png" />
+    <Content Include="UI\Shoulders.png" />
+    <Content Include="UI\Skip.png" />
+    <Content Include="UI\Slider.png" />
+    <Content Include="UI\Start.png" />
+    <Content Include="UI\Submit.png" />
+    <Content Include="UI\Thighs.png" />
+    <Content Include="UI\UpdateQueue.png" />
+    <Content Include="UI\UpdateQueue_no.png" />
+    <Content Include="UI\UserPassword.png" />
+    <Content Include="UI\Variance.png" />
+    <Content Include="UI\VarianceLabel.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.ContentPipelineExtensions.targets" />

@@ -102,26 +102,20 @@ namespace SWENG.Service
         {
             ReInitialize();
             OnLoadStarted(EventArgs.Empty);
-            string path = System.AppDomain.CurrentDomain.BaseDirectory + "/GitHub/KinectTherapyTest/KinectTherapyContent/Exercises/";
-            //string path = System.AppDomain.CurrentDomain.BaseDirectory + "../../../../KinectTherapyContent/Exercises/";
+            string path = System.AppDomain.CurrentDomain.BaseDirectory + "../../../../KinectTherapyContent/Exercises/";
 
             Exercises = new ExerciseGameComponent[e.Exercises.Length];
 
-            //loop through the exercises in the CurrentCatalog and turn them into Exercise objects. 
+             //loop through the exercises in the CurrentCatalog and turn them into Exercise objects. 
             for (int i = 0; i < e.Exercises.Length; i++)
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Exercise));
                 StreamReader reader = new StreamReader(path + e.Exercises[i].Id + ".xml");
                 // deserialize the xml and create an Exercise
                 Exercise temp = (Exercise)serializer.Deserialize(reader);
-                if (null != e.Exercises[i].Repetitions && e.Exercises[i].Repetitions > 0)
-                {
-                    temp.Repetitions = e.Exercises[i].Repetitions;
-                }
-                if (null != e.Exercises[i].Variance)
-                {
-                    temp.Variance = e.Exercises[i].Variance;
-                }
+                temp.Repetitions = e.Exercises[i].Repetitions;
+                temp.Variance = e.Exercises[i].Variance;
+
                 Exercises[i] = new ExerciseGameComponent(_game, temp);
                 reader.Close();
 

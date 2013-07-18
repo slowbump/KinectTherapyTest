@@ -37,6 +37,7 @@
     <Reference Include="Microsoft.Kinect, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -51,33 +52,77 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorStreamRenderer.cs" />
     <Compile Include="Criteria\AlignmentCriterion.cs" />
     <Compile Include="Criteria\AngleCriterion.cs" />
     <Compile Include="Criteria\Checkpoint.cs" />
     <Compile Include="Criteria\CriteriaRepetition.cs" />
     <Compile Include="Criteria\Criterion.cs" />
     <Compile Include="Criteria\Exercise.cs" />
-    <Compile Include="Criteria\IRepetition.cs" />
     <Compile Include="Criteria\JointAnalyzer.cs" />
     <Compile Include="Criteria\Operation.cs" />
+    <Compile Include="Criteria\PointCriterion.cs" />
     <Compile Include="Criteria\XmlJointType.cs" />
     <Compile Include="ExerciseGameComponent.cs" />
+    <Compile Include="FormResult.cs" />
+    <Compile Include="IRepetition.cs" />
+    <Compile Include="Object2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sensor\KinectChooser.cs" />
     <Compile Include="Service\CatalogManager.cs" />
     <Compile Include="Service\ExerciseQueue.cs" />
     <Compile Include="Service\RecordingManager.cs" />
     <Compile Include="Service\SkeletonPool.cs" />
     <Compile Include="SkeletonStamp.cs" />
+    <Compile Include="SkeletonStampStreamRenderer.cs" />
+    <Compile Include="SkeletonStreamRenderer.cs" />
     <Compile Include="Test\CatalogExerciseXmlTestFixture.cs" />
     <Compile Include="Test\ExerciseTest.cs" />
     <Compile Include="Test\ExerciseQueueTest.cs" />
+    <Compile Include="Test\GuiCatalogTileTest.cs" />
     <Compile Include="Test\JointAnalyzerTest.cs" />
+    <Compile Include="TimerRepetition.cs" />
+    <Compile Include="UserInterface\CatalogScreen.cs" />
+    <Compile Include="UserInterface\CatalogTileEditScreen.cs" />
+    <Compile Include="UserInterface\ExerciseScreen.cs" />
+    <Compile Include="UserInterface\ExerciseTile.cs" />
+    <Compile Include="UserInterface\GuiButton.cs" />
+    <Compile Include="UserInterface\GuiCatalogTile.cs" />
+    <Compile Include="UserInterface\GuiCheckbox.cs" />
+    <Compile Include="UserInterface\GuiDrawable.cs" />
+    <Compile Include="UserInterface\GuiHeader.cs" />
+    <Compile Include="UserInterface\GuiInputBox.cs" />
+    <Compile Include="UserInterface\GuiLabel.cs" />
+    <Compile Include="UserInterface\GuiScrollable.cs" />
+    <Compile Include="UserInterface\GuiScrollableCollection.cs" />
+    <Compile Include="UserInterface\GuiSensorStatus.cs" />
+    <Compile Include="UserInterface\HomeScreen.cs" />
+    <Compile Include="UserInterface\LoadingScreen.cs" />
+    <Compile Include="UserInterface\Manager.cs" />
+    <Compile Include="UserInterface\ReplayTile.cs" />
+    <Compile Include="UserInterface\Screen.cs" />
+    <Compile Include="UserInterface\SensorTileEditScreen.cs" />
+    <Compile Include="UserInterface\SummaryScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KinectTherapyContent\KinectTherapyContent.csproj">
       <Project>{43442DAA-B835-42F4-9712-576A9101B5C2}</Project>
       <Name>KinectTherapyContent</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\Arial16.spritefont" />
+    <None Include="Content\Segoe16.spritefont" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\blank.png" />
+    <Content Include="Content\blank128.png" />
+    <Content Include="Content\Bone.png" />
+    <Content Include="Content\gradient.png" />
+    <Content Include="Content\Joint.png" />
+    <Content Include="Content\KinectColorVisualizer.fx" />
+    <Content Include="Content\KinectDepthVisualizer.fx" />
+    <Content Include="Content\KinectSensor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
