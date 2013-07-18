@@ -77,6 +77,7 @@
     <Compile Include="SkeletonStampStreamRenderer.cs" />
     <Compile Include="SkeletonStreamRenderer.cs" />
     <Compile Include="Test\CatalogExerciseXmlTestFixture.cs" />
+    <Compile Include="Test\GuiButtonTest.cs" />
     <Compile Include="Test\ExerciseTest.cs" />
     <Compile Include="Test\ExerciseQueueTest.cs" />
     <Compile Include="Test\GuiCatalogTileTest.cs" />
