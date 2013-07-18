@@ -47,22 +47,14 @@ namespace SWENG.UserInterface
 
         public override void LoadContent()
         {
-#if RELEASE
+            base.LoadContent();
             if (null == contentManager)
             {
                 contentManager = new ContentManager(Game.Services, "Content");
             }
-#else
-            if (null == contentManager)
-            {
-                contentManager = new ContentManager(Game.Services, @"C:\Content");
-            }
-#endif
 
             _blankTexture = contentManager.Load<Texture2D>(@"blank");
             _spriteFont = contentManager.Load<SpriteFont>(@"Arial16");
-
-            base.LoadContent();
         }
 
         public override void UnloadContent()

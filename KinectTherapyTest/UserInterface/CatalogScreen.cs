@@ -289,17 +289,10 @@ namespace SWENG.UserInterface
         /// </summary>
         public override void LoadContent()
         {
-#if RELEASE
             if (null == contentManager)
             {
                 contentManager = new ContentManager(Game.Services, "Content");
             }
-#else
-            if (null == contentManager)
-            {
-                contentManager = new ContentManager(Game.Services, @"C:\Content");
-            }
-#endif
 
             _spriteFont = contentManager.Load<SpriteFont>("Arial16");
 

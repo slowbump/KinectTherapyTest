@@ -145,17 +145,10 @@ namespace SWENG.UserInterface
 
         public override void LoadContent()
         {
-#if RELEASE
             if (null == contentManager)
             {
                 contentManager = new ContentManager(Game.Services, "Content");
             }
-#else
-            if (null == contentManager)
-            {
-                contentManager = new ContentManager(Game.Services, @"C:\Content");
-            }
-#endif
 
             foreach (GuiDrawable guiDrawable in _guiDrawable)
             {
