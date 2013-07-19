@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -77,6 +78,7 @@
     <Compile Include="SkeletonStampStreamRenderer.cs" />
     <Compile Include="SkeletonStreamRenderer.cs" />
     <Compile Include="Test\CatalogExerciseXmlTestFixture.cs" />
+    <Compile Include="Test\CatalogScreenTest.cs" />
     <Compile Include="Test\GuiButtonTest.cs" />
     <Compile Include="Test\ExerciseTest.cs" />
     <Compile Include="Test\ExerciseQueueTest.cs" />

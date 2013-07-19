@@ -36,6 +36,7 @@ namespace SWENG.UserInterface
         private SpriteFont _spriteFont;
 
         private string _selectedCategory;
+        public string SelectedCategory { get { return _selectedCategory; } }
         private Vector2 _listItemPosition;
 
         /// <summary>

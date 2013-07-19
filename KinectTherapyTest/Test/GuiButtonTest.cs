@@ -30,7 +30,7 @@ namespace KinectTherapyTest.Test
         }
 
 
-        [SetUp]
+        [TestFixtureSetUp]
         public void SetUp()
         {
             game = new Game();
@@ -39,15 +39,20 @@ namespace KinectTherapyTest.Test
             contentManager = new ContentManager(game.Services);
             contentManager.RootDirectory = @"C:\Content\";
             game.Run();
+
+            spriteBatch = new SpriteBatch(game.GraphicsDevice);
+            game.Services.AddService(typeof(SpriteBatch), spriteBatch);
+        }
+
+        [SetUp]
+        public void TestSetUp()
+        {
+            isClickedOn = false;
         }
 
         [Test(Description = "Create the button & hover")]
         public void FirstTest()
         {
-
-            spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            game.Services.AddService(typeof(SpriteBatch), spriteBatch);
-
             gui = new GuiButton("button1", new Vector2(500, 500), Vector2.Zero);
             gui.LoadContent(game, contentManager, spriteBatch);
 
@@ -87,10 +92,6 @@ namespace KinectTherapyTest.Test
         [Test(Description = "Clicking the button fires an event")]
         public void FourthTest()
         {
-
-            spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            game.Services.AddService(typeof(SpriteBatch), spriteBatch);
-
             gui = new GuiButton("UpdateQueue", new Vector2(500, 500), Vector2.Zero);
             gui.ClickEvent += clickedOn;
             gui.LoadContent(game, contentManager, spriteBatch);
@@ -129,6 +130,8 @@ namespace KinectTherapyTest.Test
 
             Assert.IsTrue(gui.Hovered);
             Assert.IsTrue(isClickedOn);
+
+            gui.ClickEvent -= clickedOn;
         }
     }
 }
