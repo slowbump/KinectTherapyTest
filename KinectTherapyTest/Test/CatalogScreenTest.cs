@@ -58,12 +58,6 @@ namespace KinectTherapyTest.Test
         [Test(Description = "Open screen")]
         public void Open_screen()
         {
-            //spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            //game.Services.AddService(typeof(SpriteBatch), spriteBatch);
-
-            //CatalogManager catalogManager = new CatalogManager();
-            //game.Services.AddService(typeof(CatalogManager), catalogManager);
-
             catalogManager.AddExerciseToSelected("blah1", "test");
             catalogManager.AddExerciseToSelected("blah2", "test2");
 
@@ -86,28 +80,18 @@ namespace KinectTherapyTest.Test
         [Test(Description = "Switching categories")]
         public void Switch_category()
         {
-            //spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            //game.Services.AddService(typeof(SpriteBatch), spriteBatch);
-
-            //CatalogManager catalogManager = new CatalogManager();
-            //game.Services.AddService(typeof(CatalogManager), catalogManager);
-
-            catalogManager.AddExerciseToSelected("blah1", "test");
-            catalogManager.AddExerciseToSelected("blah2", "test2");
-
             gui = new CatalogScreen(game, new Rectangle(0, 0, 500, 500), ScreenState.Active);
             gui.contentManager = contentManager;
 
             gui.Initialize();
             gui.LoadContent();
-
-            Assert.AreEqual(catalogManager.GetSelectedWorkouts().Length, 2);
-            Assert.True(string.IsNullOrEmpty(gui.SelectedCategory));
-
             gui.OpenScreen();
 
-            Assert.AreEqual(catalogManager.GetSelectedWorkouts().Length, 0);
             Assert.AreEqual(gui.SelectedCategory.ToLower(), "arms");
+
+            gui.SwitchCategories("other");
+
+            Assert.AreEqual(gui.SelectedCategory.ToLower(), "other");
         }
     }
 }

@@ -39,6 +39,8 @@ namespace SWENG.UserInterface
         private int _repetitionIndex;
         private int _varianceIndex;
 
+        public GuiDrawable[] GuiDrawables { get { return _guiDrawable; } }
+
         /// <summary>
         /// Initialize a new instance of the ExerciseScreen class.
         /// </summary>

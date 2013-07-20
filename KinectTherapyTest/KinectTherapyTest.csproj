@@ -79,10 +79,13 @@
     <Compile Include="SkeletonStreamRenderer.cs" />
     <Compile Include="Test\CatalogExerciseXmlTestFixture.cs" />
     <Compile Include="Test\CatalogScreenTest.cs" />
+    <Compile Include="Test\CatalogTileEditScreenTest.cs" />
+    <Compile Include="Test\GuiCheckboxTest.cs" />
     <Compile Include="Test\GuiButtonTest.cs" />
     <Compile Include="Test\ExerciseTest.cs" />
     <Compile Include="Test\ExerciseQueueTest.cs" />
     <Compile Include="Test\GuiCatalogTileTest.cs" />
+    <Compile Include="Test\GuiInputBoxTest.cs" />
     <Compile Include="Test\JointAnalyzerTest.cs" />
     <Compile Include="TimerRepetition.cs" />
     <Compile Include="UserInterface\CatalogScreen.cs" />
