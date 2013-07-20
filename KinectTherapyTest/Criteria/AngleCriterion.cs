@@ -127,5 +127,18 @@ namespace SWENG.Criteria
             results[(int)adjacentJoints[1].JointType] = normalizedAccuracy;
             return results;
         }
+
+        public override List<Joint> MatchSkeletonToCriterion()
+        {
+            List<JointType> jointTypes = new List<JointType>();
+
+            jointTypes.Add(Vertex.GetJointType());
+            foreach (XmlJointType xmlJointType in OtherJoints)
+            {
+                jointTypes.Add(xmlJointType.GetJointType());
+            }
+            return null;
+        }
+
     }
 }
