@@ -231,17 +231,6 @@ namespace SWENG.UserInterface
 
                 MouseYCoord = mouseState.Y;
                 MouseYPercent = 100 - ((MouseYCoord/_texture2DRectangle.Height) * 100);
-
-                /*============= Test of percentage conversion of mouse coordinates (not working -yet) ==============*/
-                var yMouseCoordTexture = CreateMouseCoordTexture(_game, _contentManager, _spriteBatch);
-                var yMouseSource = new Rectangle(0, 0, yMouseCoordTexture.Width, yMouseCoordTexture.Height);
-                var yMouseDestination = new Rectangle(0, Texture2D.Height + 50, yMouseCoordTexture.Width,
-                                                        yMouseCoordTexture.Height);
-
-                _spriteBatch.Begin();
-                _spriteBatch.Draw(yMouseCoordTexture, yMouseDestination, yMouseSource, Color.Blue);
-                _spriteBatch.End();
-                /*==================================================================================================*/
             }
         }
 
@@ -252,7 +241,7 @@ namespace SWENG.UserInterface
         /// <param name="contentManager"></param>
         /// <param name="spriteBatch"></param>
         /// <returns></returns>
-        private Texture2D CreateXAxisTitleTexture(Game game, ContentManager contentManager, SpriteBatch spriteBatch)
+        public Texture2D CreateXAxisTitleTexture(Game game, ContentManager contentManager, SpriteBatch spriteBatch)
         {
             _spriteFont = contentManager.Load<SpriteFont>("Arial12");
             Vector2 xAxisMeasure = _spriteFont.MeasureString(_xAxisLabel);
@@ -284,7 +273,7 @@ namespace SWENG.UserInterface
         /// <param name="contentManager"></param>
         /// <param name="spriteBatch"></param>
         /// <returns></returns>
-        private Texture2D CreateYAxisTitleTexture(Game game, ContentManager contentManager, SpriteBatch spriteBatch)
+        public Texture2D CreateYAxisTitleTexture(Game game, ContentManager contentManager, SpriteBatch spriteBatch)
         {
             SpriteFont spriteFont = contentManager.Load<SpriteFont>("Arial12");
             Vector2 yAxisMeasure = spriteFont.MeasureString(_yAxisLabel);
@@ -316,7 +305,7 @@ namespace SWENG.UserInterface
         /// <param name="contentManager"></param>
         /// <param name="spriteBatch"></param>
         /// <returns></returns>
-        private Texture2D CreateYAxisIntervalTexture(Game game, ContentManager contentManager, SpriteBatch spriteBatch)
+        public Texture2D CreateYAxisIntervalTexture(Game game, ContentManager contentManager, SpriteBatch spriteBatch)
         {
             SpriteFont spriteFont = contentManager.Load<SpriteFont>("Arial12");
             Vector2 yAxisMeasure = spriteFont.MeasureString(_yAxisLabel);
@@ -349,7 +338,7 @@ namespace SWENG.UserInterface
         /// <param name="spriteBatch"></param>
         /// <param name="dataPoints"></param>
         /// <param name="timeSpan"></param>
-        private void DrawDataPointTexture(Game game, SpriteBatch spriteBatch, float[] dataPoints, float timeSpan)
+        public void DrawDataPointTexture(Game game, SpriteBatch spriteBatch, float[] dataPoints, float timeSpan)
         {
             int i;
             float x;
@@ -411,32 +400,5 @@ namespace SWENG.UserInterface
         {
             sb.DrawString(_spriteFont, text, location, Color.Blue);
         }
-
-        /* ======================  Mouse coordinate test functionality ======================================== */
-        private Texture2D CreateMouseCoordTexture(Game game, ContentManager contentManager, SpriteBatch spriteBatch)
-        {
-            SpriteFont spriteFont = contentManager.Load<SpriteFont>("Arial12");
-            Vector2 yAxisMeasure = spriteFont.MeasureString(MouseYPercent.ToString(CultureInfo.InvariantCulture));
-            RenderTarget2D renderTarget2d = new RenderTarget2D(game.GraphicsDevice, (int)yAxisMeasure.X, (int)yAxisMeasure.Y);
-
-            game.GraphicsDevice.SetRenderTarget(renderTarget2d);
-            game.GraphicsDevice.Clear(ClearOptions.Target, Color.Transparent, 0, 0);
-
-            spriteBatch.Begin();
-
-            spriteBatch.DrawString(
-                spriteFont,
-                String.Format("X Coord: {0} | Y Coord:{1}", MouseXCoord, MouseYCoord),
-                Vector2.Zero, 
-                Color.Blue
-            );
-
-            spriteBatch.End();
-
-            game.GraphicsDevice.SetRenderTarget(null);
-
-            return renderTarget2d;
-        }
-        /* ==================================================================================================== */
     }
 }
