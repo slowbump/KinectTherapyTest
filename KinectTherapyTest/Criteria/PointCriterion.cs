@@ -25,6 +25,11 @@ namespace SWENG.Criteria
         {
             throw new NotImplementedException();
         }
+
+        public override List<Joint> MatchSkeletonToCriterion()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
