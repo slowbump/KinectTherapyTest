@@ -22,8 +22,6 @@ namespace KinectTherapyTest.Test
         private Game _game;
         private GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
-        private SpriteFont _spriteFont;
-        private Rectangle _viewableArea;
 
         private readonly string[] _axesNames = { "Time - seconds", "Deviation" };
         private const string ChartType = "Repetitions";
@@ -38,7 +36,7 @@ namespace KinectTherapyTest.Test
         public void SetUp()
         {
             _game = new Game();
-            _graphicsDeviceManager = new GraphicsDeviceManager(_game) {GraphicsProfile = GraphicsProfile.HiDef};
+            _graphicsDeviceManager = new GraphicsDeviceManager(_game) { GraphicsProfile = GraphicsProfile.HiDef };
             _contentManager = new ContentManager(_game.Services)
                 {
                     RootDirectory = @"C:\Content"
@@ -82,6 +80,7 @@ namespace KinectTherapyTest.Test
 
             Assert.IsNotNull(testing);
         }
+
         [Test(Description = "First test is to create chart")]
         public void CreateChart()
         {
@@ -91,6 +90,51 @@ namespace KinectTherapyTest.Test
             _guiChart = new GuiChart("Title", new Vector2(500,500), Vector2.Zero, _guiChartOptions);
             _guiChart.LoadContent(_game, _contentManager, _spriteBatch);
 
+        }
+
+        [Test(Description = "Clicking in the chart generates an X-coord / Y-coord percentage pair")]
+        public void ClickMouse()
+        {
+            _timeSpan = _dataPoints.Length;
+
+            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, MarkerSize, _dataPoints, _timeSpan, RepDuration);
+            _guiChart = new GuiChart("Title", new Vector2(500, 500), Vector2.Zero, _guiChartOptions);
+            _guiChart.LoadContent(_game, _contentManager, _spriteBatch);
+
+            MouseState currentMouseState = new MouseState(
+                    50,
+                    50,
+                    0,
+                    ButtonState.Released,
+                    ButtonState.Released,
+                    ButtonState.Released,
+                    ButtonState.Released,
+                    ButtonState.Released
+                );
+
+            MouseState oldMouseState = new MouseState(
+                    currentMouseState.X,
+                    currentMouseState.Y,
+                    currentMouseState.ScrollWheelValue,
+                    ButtonState.Released,
+                    currentMouseState.MiddleButton,
+                    currentMouseState.RightButton,
+                    currentMouseState.XButton1,
+                    currentMouseState.XButton2
+                );
+
+            Assert.IsNotNull(currentMouseState);
+            Assert.IsNotNull(oldMouseState);
+
+            GameTime gt = new GameTime(new TimeSpan(0, 0, 1), new TimeSpan(0, 0, 0, 0, 100));
+
+            _guiChart.Update(currentMouseState, oldMouseState, new Rectangle(currentMouseState.X, currentMouseState.Y, 1, 1), gt);
+
+            Assert.IsNotNull(_guiChart.MouseXCoord);
+            Assert.IsNotNull(_guiChart.MouseYCoord);
+
+            Assert.IsNotNull(_guiChart.MouseXPercent);
+            Assert.IsNotNull(_guiChart.MouseYPercent);
         }
     }
 }

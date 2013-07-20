@@ -40,7 +40,6 @@ namespace SWENG.UserInterface
         private Rectangle _yAxisDestination;
         private Rectangle _ySource;
         private Rectangle _dataPointDestination;
-        private Rectangle _texture2DRectangle;
         #endregion
 
         #region Mouse handler variables
@@ -157,7 +156,7 @@ namespace SWENG.UserInterface
             _spriteBatch = spriteBatch;
 
             Texture2D = _contentManager.Load<Texture2D>(@"UI\ChartTexture");
-            _chartMarkerTexture = _contentManager.Load<Texture2D>(@"UI\ChartMarker");
+            _chartMarkerTexture = _contentManager.Load<Texture2D>(@"blank");
 
             _xAxisTitleTexture = CreateXAxisTitleTexture(game, _contentManager, spriteBatch);
             _yAxisTitleTexture = CreateYAxisTitleTexture(game, _contentManager, spriteBatch);
@@ -206,10 +205,6 @@ namespace SWENG.UserInterface
                 _yAxisIntervalTexture.Width,
                 _yAxisIntervalTexture.Height
             );
-
-            /* Create bounding rectangle for mouse functionality */
-            _texture2DRectangle = new Rectangle(Texture2D.Bounds.X + MARGIN, Texture2D.Bounds.Y + 3, Texture2D.Width + 100, Texture2D.Height + 3);
-
         }
 
         /// <summary>
@@ -222,15 +217,15 @@ namespace SWENG.UserInterface
         /// <param name="gameTime"></param>
         public override void Update(MouseState mouseState, MouseState oldMouseState, Rectangle mouseBoundingBox, GameTime gameTime)
         {
-            if (!mouseBoundingBox.Intersects(_texture2DRectangle)) return;
+            if (!mouseBoundingBox.Intersects(Rectangle)) return;
 
             if (mouseState.LeftButton == ButtonState.Released && oldMouseState.LeftButton == ButtonState.Pressed)
             {
                 MouseXCoord = mouseState.X;
-                MouseXPercent = 100 - ((MouseXCoord/_texture2DRectangle.Width) * 100);
+                MouseXPercent = 100 - ((MouseXCoord / Rectangle.Width) * 100);
 
                 MouseYCoord = mouseState.Y;
-                MouseYPercent = 100 - ((MouseYCoord/_texture2DRectangle.Height) * 100);
+                MouseYPercent = 100 - ((MouseYCoord / Rectangle.Height) * 100);
             }
         }
 
