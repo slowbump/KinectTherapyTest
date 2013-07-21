@@ -13,17 +13,16 @@ namespace KinectTherapyUnitTesting
         private CatalogManager _catalogManager;
         private string CatalogDirectory = System.AppDomain.CurrentDomain.BaseDirectory + "/GitHub/KinectTherapyTest/KinectTherapyContent/Exercises/";
 
-        [Test]
+        [Test(Description = "UC-1.2: The application loads the “Catalog” screen")]
         public void CatalogXmlLoaded()
         {
-            //var dataTable = new DataTable();
             _catalogManager = new CatalogManager();
 
-            var dataTable = _catalogManager.DataTable;
+            _catalogManager.CatalogXmlLinqData();
             Assert.Pass("CatalogManager.CatalogXmlLinqData() passed.");
         }
 
-        [Test]
+        [Test(Description = "UC-1.3: The physical therapist selects a category")]
         public void AreExerciseListsEquivalent()
         {
             var testListComparer = new List<CatalogItem> {
@@ -53,27 +52,10 @@ namespace KinectTherapyUnitTesting
             _catalogManager = new CatalogManager();
 
             var testListResults = _catalogManager.GetExercisesByType("Arms");
-            System.Console.WriteLine(testListComparer[0].ToString());
-            System.Console.WriteLine(testListResults[0].ToString());
-            //Assert.AreEqual(testListComparer[0], testListResults[0]);
+            
             CollectionAssert.AreEquivalent(testListComparer, testListResults);
+            Assert.Pass("Exercise Lists are equivalent.");
         }
-
-        //[Test]
-        // deprecated test based on refactoring
-        //public void AreExerciseXmlEquivalent()
-        //{
-        //    var exerciseList = new List<string> {"EXELAE", "EXERAE"};
-
-        //    var expectedXmlDocument = new XmlDocument();
-        //    expectedXmlDocument.Load(CatalogDirectory + @"EXELAE.xml");
-
-        //    _catalogManager = new CatalogManager();
-
-        //    var actualXmlDocument = _catalogManager.ListWorkoutExerciseObjects(exerciseList);
-
-        //   StringAssert.AreEqualIgnoringCase(expectedXmlDocument.ToString(), actualXmlDocument.ToString());
-        //}
 
     }
 }
