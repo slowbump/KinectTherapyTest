@@ -209,7 +209,7 @@ namespace KinectTherapyTest.Test
         }
 
         #region Integration Testing
-        [Test(Description = "Clicking the checkmark should save to the queue")]
+        [Test(Description = "Reference ID: UC-1, Step 4")]
         public void Save_to_queue()
         {
             isClickedOn = false;
@@ -263,7 +263,7 @@ namespace KinectTherapyTest.Test
             Assert.Greater(catalogManager.GetSelectedWorkouts().Length, 0);
         }
 
-        [Test(Description = "Clicking the edit should save to the queue & fire an event")]
+        [Test(Description = "Reference ID: UC-1, Step 4; Reference ID: UC-1, Step 6a.3; Reference ID: UC-2, Step 1")]
         public void Edit_And_Event()
         {
             isClickedOn = false;
@@ -318,10 +318,5 @@ namespace KinectTherapyTest.Test
             Console.WriteLine(catalogManager.GetSelectedWorkouts().Length);
         }
         #endregion
-
-        [TestFixtureTearDown]
-        public void TearDown()
-        {
-        }
     }
 }

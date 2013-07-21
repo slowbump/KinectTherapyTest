@@ -55,7 +55,7 @@ namespace KinectTherapyTest.Test
             catalogManager.ClearWorkout();
         }
 
-        [Test(Description = "Open screen")]
+        [Test(Description = "Reference ID: UC-1, Step 2")]
         public void Open_screen()
         {
             catalogManager.AddExerciseToSelected("blah1", "test");
@@ -76,8 +76,7 @@ namespace KinectTherapyTest.Test
             Assert.AreEqual(gui.SelectedCategory.ToLower(), "arms");
         }
 
-        /** Update switching categories */
-        [Test(Description = "Switching categories")]
+        [Test(Description = "Reference ID: UC-1, Step 3")]
         public void Switch_category()
         {
             gui = new CatalogScreen(game, new Rectangle(0, 0, 500, 500), ScreenState.Active);

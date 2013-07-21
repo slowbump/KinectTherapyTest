@@ -48,7 +48,7 @@ namespace KinectTherapyTest.Test
             game.Services.AddService(typeof(CatalogManager), catalogManager);
         }
 
-        [Test(Description = "Load and Edit the attributes")]
+        [Test(Description = "Reference ID: UC-2, Step 4, 5, 4a.1; Reference ID: UC-5, Step 4, 5, 4a.1")]
         public void Edit_Attributes()
         {
             gui = new CatalogTileEditScreen(game, new Rectangle(0, 0, 500, 500), ScreenState.Active);

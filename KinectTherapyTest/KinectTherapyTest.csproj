@@ -87,6 +87,7 @@
     <Compile Include="Test\GuiCatalogTileTest.cs" />
     <Compile Include="Test\GuiInputBoxTest.cs" />
     <Compile Include="Test\JointAnalyzerTest.cs" />
+    <Compile Include="Test\ReplayTileTest.cs" />
     <Compile Include="TimerRepetition.cs" />
     <Compile Include="UserInterface\CatalogScreen.cs" />
     <Compile Include="UserInterface\CatalogTileEditScreen.cs" />
