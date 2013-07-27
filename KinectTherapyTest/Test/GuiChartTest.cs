@@ -27,8 +27,8 @@ namespace KinectTherapyTest.Test
         private const string ChartType = "Repetitions";
         private const bool ChartLines = true;
         private const bool TickMarks = true;
-        private const int MarkerSize = 2;
-        private readonly float[] _dataPoints = { 1f, .33f, 1f, .67f, 1f, -1f, 0f, -.33f, 0f, 0f, 0f, -.67f, 0f, 1f, 0f };
+        private const float Scale = .75f;
+        private readonly float[] _dataPoints = { 1f, .33f, 1f, .67f, 1f, -1f, 0f, .33f, 0f, 0f, 0f, .67f, 0f, 1f, 0f };
         private float _timeSpan;
         private const float RepDuration = 47500;
 
@@ -45,15 +45,23 @@ namespace KinectTherapyTest.Test
 
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
             _game.Services.AddService(typeof(SpriteBatch), _spriteBatch);
+
+            string[] files = Directory.GetFiles(@"c:\school");
+
+            foreach (string file in files)
+            {
+                File.Delete(file);
+            }
+
         }
 
-        [Test(Description = "Test creation of X-axis texture")]
+        [Test(Description = "UC-10: The Chart creates the texture the x-axis legend")]
         public void CreateXAxisTexture()
         {
             _timeSpan = _dataPoints.Length;
 
-            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, MarkerSize, _dataPoints, _timeSpan, RepDuration);
-            _guiChart = new GuiChart("Title", new Vector2(500, 500), Vector2.Zero, _guiChartOptions);
+            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, Scale, _dataPoints, _timeSpan, RepDuration);
+            _guiChart = new GuiChart("Title", new Vector2(1024, 780), Vector2.Zero, _guiChartOptions);
 
             Texture2D testing = _guiChart.CreateXAxisTitleTexture(_game, _contentManager, _spriteBatch);
 
@@ -62,15 +70,16 @@ namespace KinectTherapyTest.Test
             fs.Close();
 
             Assert.IsNotNull(testing);
+            Assert.Pass("GuiChart.CreateXAxisTitleTexture passed.");
         }
 
-        [Test(Description = "Test creation of Y-axis texture")]
+        [Test(Description = "UC-10: The Chart creates the texture the y-axis legend")]
         public void CreateYAxisTexture()
         {
             _timeSpan = _dataPoints.Length;
 
-            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, MarkerSize, _dataPoints, _timeSpan, RepDuration);
-            _guiChart = new GuiChart("Title", new Vector2(500, 500), Vector2.Zero, _guiChartOptions);
+            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, Scale, _dataPoints, _timeSpan, RepDuration);
+            _guiChart = new GuiChart("Title", new Vector2(1024, 780), Vector2.Zero, _guiChartOptions);
 
             Texture2D testing = _guiChart.CreateYAxisTitleTexture(_game, _contentManager, _spriteBatch);
 
@@ -79,26 +88,55 @@ namespace KinectTherapyTest.Test
             fs.Close();
 
             Assert.IsNotNull(testing);
+            Assert.Pass("GuiChart.CreateYAxisTitleTexture passed.");
         }
 
-        [Test(Description = "First test is to create chart")]
-        public void CreateChart()
+
+        [Test(Description = "UC-10: Create Chart Texture")]
+        public void DrawChartBase()
         {
             _timeSpan = _dataPoints.Length;
 
-            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, MarkerSize, _dataPoints, _timeSpan, RepDuration);
-            _guiChart = new GuiChart("Title", new Vector2(500,500), Vector2.Zero, _guiChartOptions);
+            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, Scale, _dataPoints, _timeSpan, RepDuration);
+            _guiChart = new GuiChart("Title", new Vector2(1024, 780), Vector2.Zero, _guiChartOptions);
             _guiChart.LoadContent(_game, _contentManager, _spriteBatch);
 
+            Texture2D testing = _guiChart.CreateChartTexture(_game, _contentManager, _spriteBatch);
+
+            FileStream fs = File.Open(@"c:\school\ChartTexture.png", FileMode.Create);
+            testing.SaveAsPng(fs, testing.Width, testing.Height);
+            fs.Close();
+
+            Assert.IsNotNull(testing);
+            Assert.Pass("GuiChart.CreateChartTexture passed.");
         }
 
-        [Test(Description = "Clicking in the chart generates an X-coord / Y-coord percentage pair")]
+        [Test(Description = "UC-10: The data point array is created")]
+        public void DrawDataPoints()
+        {
+            _timeSpan = _dataPoints.Length;
+
+            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, Scale, _dataPoints, _timeSpan, RepDuration);
+            _guiChart = new GuiChart("Title", new Vector2(1024,780), Vector2.Zero, _guiChartOptions);
+            _guiChart.LoadContent(_game, _contentManager, _spriteBatch);
+
+            Texture2D testing = _guiChart.DrawDataPointTexture(_game, _spriteBatch, _dataPoints, _timeSpan);
+
+            FileStream fs = File.Open(@"c:\school\DataPointTexture.png", FileMode.Create);
+            testing.SaveAsPng(fs, testing.Width, testing.Height);
+            fs.Close();
+
+            Assert.IsNotNull(testing);
+            Assert.Pass("GuiChart.DrawDataPointTexture passed.");
+        }
+
+        [Test(Description = "UC-?: Clicking in the chart generates an X-coord / Y-coord percentage pair")]
         public void ClickMouse()
         {
             _timeSpan = _dataPoints.Length;
 
-            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, MarkerSize, _dataPoints, _timeSpan, RepDuration);
-            _guiChart = new GuiChart("Title", new Vector2(500, 500), Vector2.Zero, _guiChartOptions);
+            _guiChartOptions = new GuiChartOptions(_axesNames, ChartType, ChartLines, TickMarks, Scale, _dataPoints, _timeSpan, RepDuration);
+            _guiChart = new GuiChart("Title", new Vector2(1024, 780), Vector2.Zero, _guiChartOptions);
             _guiChart.LoadContent(_game, _contentManager, _spriteBatch);
 
             MouseState currentMouseState = new MouseState(
@@ -135,6 +173,7 @@ namespace KinectTherapyTest.Test
 
             Assert.IsNotNull(_guiChart.MouseXPercent);
             Assert.IsNotNull(_guiChart.MouseYPercent);
+            Assert.Pass("GuiChart.Update passed.");
         }
     }
 }
