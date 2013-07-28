@@ -80,6 +80,8 @@
     <Compile Include="Test\CatalogExerciseXmlTestFixture.cs" />
     <Compile Include="Test\CatalogScreenTest.cs" />
     <Compile Include="Test\CatalogTileEditScreenTest.cs" />
+    <Compile Include="Test\CriteriaRepetitionTest.cs" />
+    <Compile Include="Test\ExerciseGameComponentTest.cs" />
     <Compile Include="Test\GuiCheckboxTest.cs" />
     <Compile Include="Test\GuiButtonTest.cs" />
     <Compile Include="Test\ExerciseTest.cs" />

@@ -48,6 +48,6 @@ namespace SWENG.Criteria
 
         public abstract double[] CheckForm(SkeletonStamp skeletonStamp);
 
-        public abstract List<Joint> MatchSkeletonToCriterion();
+        public abstract List<Joint> MatchSkeletonToCriterion(SkeletonStamp skeletonStamp);
     }
 }

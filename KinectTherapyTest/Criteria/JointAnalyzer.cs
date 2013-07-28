@@ -197,5 +197,55 @@ namespace SWENG.Criteria
 
             return convertedDotAngle;
         }
+
+        public static Joint alignJointHorizontally(Joint aligningJoint, Joint jointToBeAlignedTo)
+        {
+            Joint joint = new Joint();
+            SkeletonPoint sp = new SkeletonPoint();
+            sp.X = aligningJoint.Position.X  + 1;
+            sp.Y = aligningJoint.Position.Y;
+            sp.Z = aligningJoint.Position.Z;
+            joint.Position = sp;
+            Joint[] joints = new Joint[2];
+            joints[0] = aligningJoint;
+            joints[1] = jointToBeAlignedTo;
+            return alignJoints(aligningJoint, jointToBeAlignedTo, joint);
+        }
+
+        public static Joint alignJoints(Joint aligningJoint, Joint startingJoint, Joint endingJoint)
+        {
+            Vector3 pointToBeTranslated = new Vector3(startingJoint.Position.X, startingJoint.Position.Y, startingJoint.Position.Z);
+            Vector3 origin = new Vector3(aligningJoint.Position.X, aligningJoint.Position.Y, aligningJoint.Position.Z);
+
+            Vector3 differentialVector = pointToBeTranslated - origin;
+
+
+            //get the distance between the alingning joint and starting joint. We need to maintain this distance when we rotate the joint
+            double distance = Math.Sqrt(startingJoint.Position.X * aligningJoint.Position.X + startingJoint.Position.Y * aligningJoint.Position.Y + startingJoint.Position.Z * aligningJoint.Position.Z);
+            //get current vectors
+            Vector3 startingVector = new Vector3(startingJoint.Position.X - aligningJoint.Position.X, startingJoint.Position.Y - aligningJoint.Position.Y, startingJoint.Position.Z - aligningJoint.Position.Z);
+            Vector3 expectedVector = new Vector3(endingJoint.Position.X - aligningJoint.Position.X, endingJoint.Position.Y - aligningJoint.Position.Y, endingJoint.Position.Z - aligningJoint.Position.Z);
+
+            // Normalize vectors so we can use Dot product correctly
+            startingVector.Normalize();
+            expectedVector.Normalize();
+            float dotAngle = (float)Math.Acos(Vector3.Dot(startingVector, expectedVector));
+
+            if (float.IsNaN(dotAngle))
+            {
+                dotAngle = 0;
+            }
+
+            Vector3 rotatedVect = Vector3.Transform(differentialVector, Matrix.CreateFromAxisAngle(startingVector, dotAngle));
+
+            rotatedVect += origin;
+
+            SkeletonPoint newSkeletonPoint = new SkeletonPoint();
+            newSkeletonPoint.X = rotatedVect.X;
+            newSkeletonPoint.Y = rotatedVect.Y;
+            newSkeletonPoint.Z = rotatedVect.Z;
+            startingJoint.Position = newSkeletonPoint;
+            return startingJoint;
+        }
     }
 }

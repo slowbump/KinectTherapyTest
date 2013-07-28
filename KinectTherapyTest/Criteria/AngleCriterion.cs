@@ -121,6 +121,7 @@ namespace SWENG.Criteria
                     normalizedAccuracy = (Angle - convertedDotAngle) / 180;
                     break;
             }
+            normalizedAccuracy = Math.Abs(normalizedAccuracy);
             double[] results = new double[20];
             results[(int)vertexJoint.JointType] = normalizedAccuracy;
             results[(int)adjacentJoints[0].JointType] = normalizedAccuracy;
@@ -128,7 +129,7 @@ namespace SWENG.Criteria
             return results;
         }
 
-        public override List<Joint> MatchSkeletonToCriterion()
+        public override List<Joint> MatchSkeletonToCriterion(SkeletonStamp skeletonStamp)
         {
             List<JointType> jointTypes = new List<JointType>();
 

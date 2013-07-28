@@ -132,9 +132,31 @@ namespace SWENG.Criteria
             return alignmentValue;
         }
 
-        public override List<Joint> MatchSkeletonToCriterion()
+        public override List<Joint> MatchSkeletonToCriterion(SkeletonStamp skeletonStamp)
         {
-            throw new NotImplementedException();
+            Joint[] trackedJoints = new Joint[Joints.Length];
+            Joint centerJoint;
+            int i = 0;
+            // get the joints to be aligned
+            foreach (XmlJointType type in Joints)
+            {
+                trackedJoints[i++] = skeletonStamp.GetTrackedSkeleton().Joints[type.GetJointType()];
+            }
+            double tempValue;
+            switch (Alignment)
+            {
+                case Alignment.Point:
+                    centerJoint = skeletonStamp.GetTrackedSkeleton().Joints[CenterJoint.GetJointType()];
+                    tempValue = 1 - JointAnalyzer.areJointsAligned(centerJoint, trackedJoints);
+                    break;
+                case Alignment.Horizontal:
+                    trackedJoints[(int)trackedJoints[1].JointType] = JointAnalyzer.alignJointHorizontally(trackedJoints[0], trackedJoints[1]);
+                    break;
+                case Alignment.Vertical:
+                    tempValue = 1 - JointAnalyzer.alignedVertically(trackedJoints[0], trackedJoints[1]);
+                    break;
+            }
+            return new List<Joint>(trackedJoints);
         }
     }
 

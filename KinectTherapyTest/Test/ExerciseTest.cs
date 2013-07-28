@@ -47,7 +47,7 @@ namespace SWENG.Criteria
 
         }
 
-        [TestAttribute]
+        [TestAttribute(Description = "Reference ID: UC-8 Step 4")]
         public void TestAlignmentCheckForm()
         {
             #region Setup Skeleton
@@ -111,7 +111,7 @@ namespace SWENG.Criteria
             #endregion
         }
 
-        [TestAttribute]
+        [TestAttribute(Description = "Reference ID: UC-7 Step 4")]
         public void TestAlignmentMatchesCriteria()
         {
             #region Setup Skeleton
@@ -172,7 +172,7 @@ namespace SWENG.Criteria
             Assert.AreEqual(0f - 1f * TestVariance * .01f, VerticalAlignmentCriterion.MinimumAcceptedRange);
         }
 
-        [TestAttribute]
+        [TestAttribute(Description = "Reference ID: UC-8 Step 4")]
         public void TestAngleCheckForm()
         {
             #region Setup Skeleton
@@ -236,7 +236,7 @@ namespace SWENG.Criteria
             #endregion
         }
 
-        [TestAttribute]
+        [TestAttribute(Description = "Reference ID: UC-7 Step 4")]
         public void TestAngleMatchesCriteria()
         {
             #region Setup Skeleton
@@ -301,7 +301,7 @@ namespace SWENG.Criteria
             Assert.AreEqual(90 - ((180 * TestVariance * .01f) / 2), AngleCriterion.MinimumAngle);
         }
 
-        [TestAttribute]
+        [TestAttribute(Description = "Reference ID: UC-7 Step 4b")]
         public void TestExerciseVariancePushedToCriterion()
         {
             //set variance to 10%
@@ -333,43 +333,43 @@ namespace SWENG.Criteria
             }
         }
 
-        //[TestAttribute]
-        //public void TestCreateStartingSkeleton()
-        //{
-        //    #region Setup Skeleton
-        //    Skeleton[] skeletonData = new Skeleton[1];
-        //    Skeleton skeleton = new Skeleton();
-        //    skeleton.TrackingState = SkeletonTrackingState.Tracked;
-        //    /* this needs to be done because you can't set properties directly on the skelton's Joint object:
-        //     * you must create a new joint, 
-        //     * set the properties,
-        //     * then set the new joint on the skeleton */
-        //    SkeletonPoint sp = new SkeletonPoint();
-        //    sp.X = 1.0F;
-        //    sp.Y = 1.0F;
-        //    sp.Z = 1.0F;
-        //    Joint shoulder = skeleton.Joints[JointType.ShoulderLeft];
-        //    shoulder.Position = sp;
-        //    skeleton.Joints[JointType.ShoulderLeft] = shoulder;
-        //    Joint elbow = skeleton.Joints[JointType.ElbowLeft];
-        //    elbow.Position = sp;
-        //    skeleton.Joints[JointType.ElbowLeft] = elbow;
-        //    Joint wrist = skeleton.Joints[JointType.WristLeft];
-        //    wrist.Position = sp;
-        //    skeleton.Joints[JointType.WristLeft] = wrist;
-        //    skeletonData[0] = skeleton;
+        [TestAttribute]
+        public void TestCreateStartingSkeleton()
+        {
+            #region Setup Skeleton
+            Skeleton[] skeletonData = new Skeleton[1];
+            Skeleton skeleton = new Skeleton();
+            skeleton.TrackingState = SkeletonTrackingState.Tracked;
+            /* this needs to be done because you can't set properties directly on the skelton's Joint object:
+             * you must create a new joint, 
+             * set the properties,
+             * then set the new joint on the skeleton */
+            SkeletonPoint sp = new SkeletonPoint();
+            sp.X = 1.0F;
+            sp.Y = 1.0F;
+            sp.Z = 1.0F;
+            Joint shoulder = skeleton.Joints[JointType.ShoulderLeft];
+            shoulder.Position = sp;
+            skeleton.Joints[JointType.ShoulderLeft] = shoulder;
+            Joint elbow = skeleton.Joints[JointType.ElbowLeft];
+            elbow.Position = sp;
+            skeleton.Joints[JointType.ElbowLeft] = elbow;
+            Joint wrist = skeleton.Joints[JointType.WristLeft];
+            wrist.Position = sp;
+            skeleton.Joints[JointType.WristLeft] = wrist;
+            skeletonData[0] = skeleton;
 
-        //    System.Console.WriteLine("Shoulder Position X: " + shoulder.Position.X);
-        //    System.Console.WriteLine("Skel Shoulder Position X: " + skeleton.Joints[JointType.ShoulderLeft].Position.X);
-        //    SkeletonStamp skeletonStamp = new SkeletonStamp(skeletonData, 1);
+            System.Console.WriteLine("Shoulder Position X: " + shoulder.Position.X);
+            System.Console.WriteLine("Skel Shoulder Position X: " + skeleton.Joints[JointType.ShoulderLeft].Position.X);
+            SkeletonStamp skeletonStamp = new SkeletonStamp(skeletonData, 1);
 
-        //    Skeleton startingSkeleton = Exercise.createStartingSkeleton(skeletonStamp);
-        //    Skeleton[] startingSkeletonData = new Skeleton[1];
-        //    SkeletonStamp startingSkeletonStamp = new SkeletonStamp(startingSkeletonData,999);
-        //    Assert.IsTrue(Exercise.matchesCriteria(startingSkeletonStamp,Exercise.StartingCriteria), "Created skeleton does not match starting criteria");
+            Skeleton startingSkeleton = Exercise.createStartingSkeleton(skeletonStamp);
+            Skeleton[] startingSkeletonData = new Skeleton[1];
+            SkeletonStamp startingSkeletonStamp = new SkeletonStamp(startingSkeletonData, 999);
+            Assert.IsTrue(Exercise.matchesCriteria(startingSkeletonStamp, Exercise.StartingCriteria), "Created skeleton does not match starting criteria");
 
-        //    #endregion
-        //}
+            #endregion
+        }
 
 
     }

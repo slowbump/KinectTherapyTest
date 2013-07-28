@@ -16,7 +16,7 @@ namespace SWENG.Criteria
         {
         }
 
-        [TestAttribute]
+        [TestAttribute(Description = "Reference ID: UC-9 Step 3")]
         public void TestThreeJointsAreAligned()
         {
             #region align on the x and z axis

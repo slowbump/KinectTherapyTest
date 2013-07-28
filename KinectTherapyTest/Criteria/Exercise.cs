@@ -146,7 +146,7 @@ namespace SWENG.Criteria
             ISet<JointType> jointTypes = new SortedSet<JointType>();
             foreach (Criterion criterion in StartingCriteria)
             {
-                foreach (Joint jointType in criterion.MatchSkeletonToCriterion())
+                foreach (Joint jointType in criterion.MatchSkeletonToCriterion(skeletonStamp))
                 {
                     jointTypes.Add(jointType.JointType);
                 }
